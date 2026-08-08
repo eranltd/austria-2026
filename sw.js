@@ -11,7 +11,7 @@
  *
  * Bump CACHE_VERSION on any release that must invalidate old copies.
  */
-const CACHE_VERSION = "trip-v2";
+const CACHE_VERSION = "trip-v3";
 const SHELL = [
   "./",
   "./index.html",
