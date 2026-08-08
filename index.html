@@ -12,9 +12,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="הטיול">
 <meta name="format-detection" content="telephone=no">
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%230d7168'/%3E%3Cpath d='M30 122l32-44 24 30 18-22 46 60z' fill='%23bfe6df'/%3E%3Ccircle cx='128' cy='50' r='16' fill='%23f2c14e'/%3E%3C/svg%3E">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%230d7168'/%3E%3Cpath d='M30 122l32-44 24 30 18-22 46 60z' fill='%23bfe6df'/%3E%3Ccircle cx='128' cy='50' r='16' fill='%23f2c14e'/%3E%3C/svg%3E">
-<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22%D7%90%D7%95%D7%A1%D7%98%D7%A8%D7%99%D7%94-%D7%94%D7%95%D7%A0%D7%92%D7%A8%D7%99%D7%94%22%2C%22short_name%22%3A%22%D7%94%D7%98%D7%99%D7%95%D7%9C%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23e9ece9%22%2C%22theme_color%22%3A%22%230d7168%22%2C%22dir%22%3A%22rtl%22%2C%22lang%22%3A%22he%22%7D">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<link rel="icon" href="./icon-192.png">
+<link rel="manifest" href="./manifest.json">
 <title>אוסטריה־הונגריה · לוח הטיול</title>
 
 <style>
@@ -211,18 +211,13 @@ button{cursor:pointer}
   flex:none;padding:6px;border-radius:8px;
 }
 .chip2 .cx:hover{background:var(--crit-soft);color:var(--crit)}
-/* while dragging, the sticky header and the drawer must not eat the drop —
-   the pointer has to reach the lane underneath them */
-
-/* only "hidden" still moves the element, and it moves it fully away */
-@media (prefers-reduced-motion:reduce){
-  }
-@media(min-width:620px){.poolgroup .btime{
+/* group headers inside a list of results */
+.btime{
   font-size:11.5px;font-weight:750;color:var(--on-accent);background:var(--bc,var(--accent));
   padding:2px 9px;border-radius:5px;white-space:nowrap;
 }
-.poolgroup .btitle{font-size:12.5px;color:var(--ink-3)}
-.poolgroup .bcount{margin-inline-start:auto;font-size:11.5px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.btitle{font-size:12.5px;color:var(--ink-3)}
+.bcount{margin-inline-start:auto;font-size:11.5px;color:var(--ink-3);font-variant-numeric:tabular-nums}
 
 /* ---------- filters ---------- */
 .seg{display:flex;gap:3px;background:var(--sunken);border-radius:10px;padding:3px;overflow-x:auto;scrollbar-width:none}
@@ -570,7 +565,13 @@ main{
 /* inside the modal a card is for reading, not dragging */
 .bankbody .card{cursor:pointer}
 @media(max-width:620px){
-  #dlg-bank{width:100vw;max-height:100dvh;margin:0}
+  /* a <dialog> carries a UA max-width of calc(100% - 6px - 2em); without
+     overriding it, "width:100vw" is clamped and the sheet sits inset. */
+  #dlg-bank{
+    inset:0;margin:0;
+    width:100vw;max-width:none;
+    height:100dvh;max-height:none;
+  }
   .bankwrap{border-radius:0;border:0;max-height:100dvh;height:100dvh}
   .bankhead{padding-top:calc(14px + env(safe-area-inset-top))}
 }
@@ -613,6 +614,48 @@ main{
 .fline.scroll .seg button[aria-pressed="true"] .acount{
   background:var(--accent);border-color:transparent;color:var(--on-accent);
 }
+
+/* ===== never trap the user in a modal =====
+   On a phone the bank fills the screen: no backdrop to tap, no Esc key. The
+   close button is the only way out, so it stays pinned even if the flex
+   layout above it ever fails again. */
+.bankhead,.atthead{
+  position:sticky;inset-block-start:0;z-index:2;
+  background:var(--surface);
+}
+.attclose{
+  min-width:44px;min-height:44px;      /* Apple's minimum tap target */
+  display:flex;align-items:center;justify-content:center;
+  font-size:19px;line-height:1;
+}
+.attclose:hover{background:var(--sunken);color:var(--ink)}
+.attclose:active{transform:scale(.94)}
+
+/* move dialog: make the two-step nature obvious */
+.movehint{font-size:12px;color:var(--ink-3);margin:-2px 0 8px;padding-inline-start:2px}
+.daypick button .mempty{opacity:.55;font-style:italic}
+
+/* A skip link that never appears is a trap: keyboard focus lands on it and
+   there is nothing to see. Reveal it while it holds focus. */
+.vh:focus,.vh:focus-visible{
+  position:fixed;inset-block-start:8px;inset-inline-start:8px;
+  width:auto;height:auto;clip:auto;overflow:visible;z-index:200;
+  padding:10px 16px;border-radius:10px;
+  background:var(--accent);color:var(--on-accent);font-weight:700;
+}
+
+/* my-dates modal */
+.dateinput{
+  width:100%;min-height:48px;padding:10px 14px;border-radius:12px;
+  border:1px solid var(--line);background:var(--raise);color:var(--ink);
+  font:inherit;font-size:16px;   /* 16px stops iOS zooming the page on focus */
+}
+.datesprev{
+  display:flex;flex-direction:column;gap:2px;margin-top:12px;padding:12px 14px;
+  background:var(--sunken);border-radius:12px;
+}
+.datesprev b{font-size:15px}
+.datesprev span{font-size:12.5px;color:var(--ink-3)}
 </style>
 
 <div class="app" dir="rtl">
@@ -623,7 +666,7 @@ main{
         <h1 class="brand">אוסטריה <em>·</em> הונגריה</h1>
         <div class="util">
           <button class="mini primary" id="btn-bank">🗺 בנק אטרקציות</button>
-          <button class="mini" id="btn-info">לא לשכוח</button>
+          <button class="mini" id="btn-dates">📅 התאריכים שלי</button>
           <button class="mini" id="btn-sync">שמירה</button>
         </div>
       </div>
@@ -672,8 +715,17 @@ main{
     <div class="dlgh"><div><h2 id="move-title">העברה ליום</h2><div class="sub" id="move-sub"></div></div><button data-close aria-label="סגור">✕</button></div>
     <div class="dlgb">
       <div class="fline" id="move-lane"></div>
+      <div class="movehint">בחר יעד, ואז הקש על היום</div>
       <div class="daypick" id="move-days"></div>
     </div>
+  </div></dialog>
+
+  <dialog id="dlg-dates"><div class="dlg">
+    <div class="dlgh"><div><h2>📅 התאריכים שלי</h2>
+      <div class="sub">הזז את כל הטיול לתאריכים אחרים</div></div>
+      <button class="attclose" data-close aria-label="סגור">✕</button></div>
+    <div class="dlgb" id="dates-body"></div>
+    <div class="attact" id="dates-act"></div>
   </div></dialog>
 
   <dialog id="dlg-info"><div class="dlg">
@@ -738,14 +790,14 @@ try {
 } catch (e) { /* unreadable store — start clean rather than break the page */ }
 const save = () => { try { STORE.set(KEY, JSON.stringify(S)); } catch (e) {} };
 
-const val = (day, f) => (S.edits[day.date] && f in S.edits[day.date]) ? S.edits[day.date][f] : day[f];
-const edited = (day, f) => !!(S.edits[day.date] && f in S.edits[day.date]);
+const val = (day, f) => (S.edits[dayKey(day)] && f in S.edits[dayKey(day)]) ? S.edits[dayKey(day)][f] : day[f];
+const edited = (day, f) => !!(S.edits[dayKey(day)] && f in S.edits[dayKey(day)]);
 function setVal(day, f, text) {
   const t = text.trim();
-  S.edits[day.date] = S.edits[day.date] || {};
-  if (t === (day[f] || "")) delete S.edits[day.date][f];
-  else S.edits[day.date][f] = t;
-  if (!Object.keys(S.edits[day.date]).length) delete S.edits[day.date];
+  S.edits[dayKey(day)] = S.edits[dayKey(day)] || {};
+  if (t === (day[f] || "")) delete S.edits[dayKey(day)][f];
+  else S.edits[dayKey(day)][f] = t;
+  if (!Object.keys(S.edits[dayKey(day)]).length) delete S.edits[dayKey(day)];
   save();
 }
 
@@ -808,13 +860,13 @@ function makeItem(text, kind) {
   };
 }
 function planOf(day) {
-  if (!S.plan[day.date]) {
-    S.plan[day.date] = {
+  if (!S.plan[dayKey(day)]) {
+    S.plan[dayKey(day)] = {
       plan: [makeItem(val(day, "pick"))].filter(Boolean),
       alt: [makeItem(val(day, "alt")), makeItem(val(day, "extra"))].filter(Boolean),
     };
   }
-  const p = S.plan[day.date];
+  const p = S.plan[dayKey(day)];
   p.plan = p.plan || []; p.alt = p.alt || [];
   return p;
 }
@@ -1372,31 +1424,44 @@ function openMove(item, from) {
     b.addEventListener("click", () => {
       moveLane = v;
       [...seg.children].forEach((c) => c.setAttribute("aria-pressed", c === b ? "true" : "false"));
+      drawMoveDays();          /* the previews below must follow the choice */
     });
     seg.appendChild(b);
   });
   lanePick.appendChild(seg);
 
+  drawMoveDays();
+  document.getElementById("dlg-move").showModal();
+}
+
+/* Split out so the lane toggle can redraw it: which day is "free" depends
+   entirely on whether you are filling the plan or the alternatives. */
+function drawMoveDays() {
   const host = document.getElementById("move-days");
   host.innerHTML = "";
   DATA.days.forEach((d) => {
     const b = el("button");
     b.style.setProperty("--rc", `var(--${d.region})`);
     b.appendChild(el("b", null, `${d.date} · ${d.dow}`));
-    const cur = planOf(d).plan[0];
-    b.appendChild(el("span", null, cur ? cur.name : "— ריק —"));
+    const inLane = planOf(d)[moveLane] || [];
+    const names = inLane.map((x) => x.name).join(" · ");
+    const line = el("span", null, names || "— ריק —");
+    if (!names) line.classList.add("mempty");
+    b.appendChild(line);
     b.addEventListener("click", () => {
       /* moveItemTo carries the duplicate guard the old drag path had */
       const ok = moveItemTo(moveCtx.item, moveCtx.from,
         { date: d.date, lane: moveLane, idx: planOf(d)[moveLane].length });
-      document.getElementById("dlg-move").close();
+      /* Close the whole stack — bank and sheet sit above the board, and
+         leaving them open made a successful assignment look like nothing
+         had happened. */
+      document.querySelectorAll("dialog[open]").forEach((x) => x.close());
       if (!ok) return;
       show("board");
       renderBoard();
     });
     host.appendChild(b);
   });
-  document.getElementById("dlg-move").showModal();
 }
 
 /* ================= itinerary detail ================= */
@@ -1589,10 +1654,10 @@ function dayCard(day, i) {
   ts.appendChild(add);
   body.appendChild(ts);
 
-  if (S.edits[day.date]) {
+  if (S.edits[dayKey(day)]) {
     const rst = el("button", "tiny danger", "שחזר את היום מהגיליון");
     rst.addEventListener("click", () => {
-      delete S.edits[day.date]; delete S.plan[day.date];
+      delete S.edits[dayKey(day)]; delete S.plan[dayKey(day)];
       save(); renderDays(); renderBoard(); toast("היום שוחזר למקור");
     });
     body.appendChild(el("div", "dact")).appendChild(rst);
@@ -1971,6 +2036,111 @@ function openBank() {
   document.getElementById("dlg-bank").showModal();
 }
 
+/* ================= trip dates ================= */
+/* Each day keeps the date it shipped with as its identity, so moving the trip
+   never detaches what has already been planned onto it. */
+const DOW_HE = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"];
+const dayKey = (d) => d.baseIso || d.iso;
+
+DATA.days.forEach((d) => { d.baseIso = d.baseIso || d.iso; });
+const BASE_START = DATA.days[0].baseIso;
+
+const addDays = (iso, n) => {
+  const [y, m, dd] = iso.split("-").map(Number);
+  const t = new Date(y, m - 1, dd + n);
+  return {
+    iso: `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, "0")}-${String(t.getDate()).padStart(2, "0")}`,
+    date: `${String(t.getDate()).padStart(2, "0")}.${String(t.getMonth() + 1).padStart(2, "0")}`,
+    dow: DOW_HE[t.getDay()],
+    sunday: t.getDay() === 0,
+  };
+};
+
+/* Recompute every visible date from the stored offset. */
+function applyDateOffset() {
+  const off = S.dateOffset || 0;
+  DATA.days.forEach((d) => {
+    const s = addDays(d.baseIso, off);
+    d.iso = s.iso; d.date = s.date; d.dow = s.dow; d.isSunday = s.sunday;
+  });
+}
+
+/* Days whose notes mention shopping — the reason Sundays matter in Austria. */
+const shoppingDays = () => DATA.days.filter((d) => /קניות|סופר|לקנות/.test(d.shop || ""));
+
+function openDates() {
+  const dlg = document.getElementById("dlg-dates");
+  const body = document.getElementById("dates-body");
+  body.innerHTML = "";
+
+  const cur = DATA.days[0].iso;
+  body.appendChild(el("div", "lab", "יום היציאה"));
+  const inp = el("input", "dateinput");
+  inp.type = "date";
+  inp.value = cur;
+  inp.setAttribute("aria-label", "בחר את תאריך היציאה");
+  body.appendChild(inp);
+
+  const preview = el("div", "datesprev");
+  body.appendChild(preview);
+  const warn = el("div", "warnbox");
+  warn.hidden = true;
+  body.appendChild(warn);
+
+  const draw = (startIso) => {
+    const off = Math.round(
+      (new Date(startIso) - new Date(BASE_START)) / 86400000);
+    const first = addDays(BASE_START, off);
+    const last = addDays(DATA.days[DATA.days.length - 1].baseIso, off);
+    preview.innerHTML = "";
+    preview.appendChild(el("b", null,
+      `${first.date} · ${first.dow}  →  ${last.date} · ${last.dow}`));
+    preview.appendChild(el("span", null, `${DATA.days.length} ימים`));
+
+    /* Austrian shops shut on Sunday; if a shopping day lands there, say so. */
+    const clashes = shoppingDays()
+      .map((d) => addDays(d.baseIso, off))
+      .filter((s) => s.sunday);
+    warn.hidden = !clashes.length;
+    warn.innerHTML = "";
+    if (clashes.length) {
+      warn.appendChild(el("span", null, "\u26A0\uFE0F"));
+      warn.appendChild(el("span", null,
+        `יום קניות נופל על יום ראשון (${clashes.map((c) => c.date).join(", ")}) — ` +
+        `באוסטריה הסופרים סגורים. שווה להזיז את הקניות.`));
+    }
+    return off;
+  };
+
+  let pending = draw(cur);
+  inp.addEventListener("input", () => { if (inp.value) pending = draw(inp.value); });
+
+  const act = document.getElementById("dates-act");
+  act.innerHTML = "";
+
+  const reset = el("button", null, "חזרה למקורי");
+  reset.addEventListener("click", () => {
+    S.dateOffset = 0; save(); applyDateOffset();
+    renderLegBar(); show(current || "board"); dlg.close();
+    toast("התאריכים חזרו למקור");
+  });
+  act.appendChild(reset);
+
+  const apply = el("button", "primary", "עדכן תאריכים");
+  apply.addEventListener("click", () => {
+    S.dateOffset = pending; save(); applyDateOffset();
+    renderLegBar(); show(current || "board"); dlg.close();
+    toast(`הטיול הוזז ל-${DATA.days[0].date}`);
+  });
+  act.appendChild(apply);
+
+  const info = el("button", null, "\uD83E\uDDF3 לא לשכוח");
+  info.addEventListener("click", () => { dlg.close(); fillInfo(); });
+  act.insertBefore(info, act.firstChild);
+
+  dlg.showModal();
+}
+
 /* ================= dialogs ================= */
 document.querySelectorAll("[data-close]").forEach((b) =>
   b.addEventListener("click", () => b.closest("dialog").close()));
@@ -1992,7 +2162,8 @@ document.querySelectorAll("dialog").forEach((dlg) => {
    It was only reachable by noticing the small handle at the bottom. */
 document.getElementById("btn-bank").addEventListener("click", openBank);
 
-document.getElementById("btn-info").addEventListener("click", () => {
+document.getElementById("btn-dates").addEventListener("click", openDates);
+function fillInfo() {
   const b = document.getElementById("info-body");
   b.innerHTML = "";
   const w = el("div", "warnbox");
@@ -2029,7 +2200,7 @@ document.getElementById("btn-info").addEventListener("click", () => {
   b.appendChild(list);
   b.appendChild(el("p", "note", "זמני הנסיעה של אטרקציות אוסטריה נמדדים מהבסיס באוברטראון. בימי בלטון ובודפשט הם לא רלוונטיים."));
   document.getElementById("dlg-info").showModal();
-});
+}
 
 if (!STORE.persistent) {
   window.addEventListener("DOMContentLoaded", () => {
@@ -2114,12 +2285,24 @@ window.addEventListener("hashchange", () => {
 
 document.getElementById("n-aut").textContent = DATA.austria.length;
 document.getElementById("n-bud").textContent = DATA.budapest.length;
+applyDateOffset();
 (function boot() {
   let v = "", l = "";
   try { [v, l] = location.hash.slice(1).split("/"); } catch (e) { /* sandbox */ }
   if (l && LEGS[l]) LEG = l;
   show(v || "board", true);
 })();
+
+/* ================= offline ================= */
+/* Registered late and guarded: a failure here must never stop the app from
+   rendering. file:// and the artifact sandbox have no worker at all. */
+if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").catch(() => {
+      /* no offline support here — the planner still works online */
+    });
+  });
+}
 </script>
 </body>
 </html>
