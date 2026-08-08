@@ -12,9 +12,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="הטיול">
 <meta name="format-detection" content="telephone=no">
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%230d7168'/%3E%3Cpath d='M30 122l32-44 24 30 18-22 46 60z' fill='%23bfe6df'/%3E%3Ccircle cx='128' cy='50' r='16' fill='%23f2c14e'/%3E%3C/svg%3E">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%230d7168'/%3E%3Cpath d='M30 122l32-44 24 30 18-22 46 60z' fill='%23bfe6df'/%3E%3Ccircle cx='128' cy='50' r='16' fill='%23f2c14e'/%3E%3C/svg%3E">
-<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22%D7%90%D7%95%D7%A1%D7%98%D7%A8%D7%99%D7%94-%D7%94%D7%95%D7%A0%D7%92%D7%A8%D7%99%D7%94%22%2C%22short_name%22%3A%22%D7%94%D7%98%D7%99%D7%95%D7%9C%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23e9ece9%22%2C%22theme_color%22%3A%22%230d7168%22%2C%22dir%22%3A%22rtl%22%2C%22lang%22%3A%22he%22%7D">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<link rel="icon" href="./icon-192.png">
+<link rel="manifest" href="./manifest.json">
 <title>אוסטריה־הונגריה · לוח הטיול</title>
 
 <style>
@@ -64,7 +64,6 @@
   --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans Hebrew",Arial,sans-serif;
   --ease:cubic-bezier(.22,.8,.3,1);
 }
-
 </style>
 </head>
 <body>
@@ -127,7 +126,7 @@ button{cursor:pointer}
 /* ---------- leg split (we start alone, friends join on the 19th) ---------- */
 .legbar{display:flex;align-items:center;gap:8px;padding:4px 0 8px;flex-wrap:wrap}
 .legbar .flab{padding-inline-end:2px}
-.legbar .seg button{flex-direction:column;gap:3px;padding-block:7px;padding-inline:12px;line-height:1.3}
+.legbar .seg button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding-block:7px;padding-inline:12px;line-height:1.3}
 .legbar .seg button .lsub{font-size:10.5px;font-weight:600;color:var(--ink-3);font-variant-numeric:tabular-nums}
 .legbar .seg button[aria-pressed="true"] .lsub{color:var(--ink-2)}
 .legdiv{display:flex;align-items:center;gap:11px;padding:8px 2px 2px}
@@ -194,7 +193,9 @@ button{cursor:pointer}
 .chip2{
   display:flex;align-items:center;gap:9px;background:var(--raise);
   border:1px solid var(--line);border-radius:10px;padding:9px 10px;min-height:48px;
-  touch-action:none;-webkit-user-select:none;user-select:none;
+  /* was touch-action:none for dragging; with drag gone it only blocked
+     scrolling, and the lists are wall-to-wall cards. */
+  -webkit-user-select:none;user-select:none;
   transition:transform .15s var(--ease),box-shadow .15s var(--ease),opacity .15s var(--ease);
 }
 .chip2:active{transform:scale(.985)}
@@ -212,82 +213,13 @@ button{cursor:pointer}
   flex:none;padding:6px;border-radius:8px;
 }
 .chip2 .cx:hover{background:var(--crit-soft);color:var(--crit)}
-.dragging{
-  position:fixed;z-index:90;pointer-events:none;box-shadow:var(--lift);
-  border-color:var(--accent);opacity:.97;
-}
-/* while dragging, the sticky header and the drawer must not eat the drop —
-   the pointer has to reach the lane underneath them */
-.app.dragmode .topbar, .app.dragmode .drawer{pointer-events:none}
-.slot-ph{
-  border-radius:10px;background:var(--accent-soft);
-  border:2px dashed var(--accent);min-height:48px;
-}
-.trash{
-  position:fixed;inset-block-end:calc(16px + env(safe-area-inset-bottom));inset-inline:0;
-  margin:auto;width:max-content;z-index:80;background:var(--crit-soft);color:var(--crit);
-  border:2px dashed var(--crit);border-radius:99px;padding:11px 22px;font-weight:750;
-  font-size:14px;opacity:0;transform:translateY(14px);pointer-events:none;
-  transition:opacity .18s var(--ease),transform .18s var(--ease);
-}
-.trash.on{opacity:1;transform:none}
-.trash.over{background:var(--crit);color:var(--on-accent);border-style:solid}
-
-/* ---------- pool drawer ---------- */
-.drawer{
-  /* Pinned to the bottom edge and sized by its content. The handle is always
-     on screen; only .dbody grows and shrinks. No viewport units in the closed
-     state, so a collapsing iOS address bar can't move it. */
-  position:fixed;inset-inline:0;inset-block-end:0;z-index:70;background:var(--surface);
-  border-top:1px solid var(--line-2);border-radius:16px 16px 0 0;
-  box-shadow:0 -6px 30px rgba(10,25,22,.16);
-  display:flex;flex-direction:column;
-  max-height:92dvh;
-  padding-bottom:env(safe-area-inset-bottom);
-  transition:transform .28s var(--ease);
-}
-.dtray{
-  display:flex;flex-direction:column;min-height:0;
-  max-height:0;overflow:hidden;
-  transition:max-height .28s var(--ease);
-}
-.drawer.open .dtray{
-  max-height:min(58vh,470px);        /* fallback for Safari without dvh */
-  max-height:min(58dvh,470px);
-}
-/* only "hidden" still moves the element, and it moves it fully away */
-.drawer.hidden{transform:translateY(110%)}
-@media (prefers-reduced-motion:reduce){
-  .drawer,.dtray{transition:none}
-}
-.dhandle{
-  display:flex;align-items:center;gap:10px;padding:8px 14px 6px;width:100%;
-  background:none;border:0;text-align:start;min-height:44px;
-}
-.dhandle .bar{
-  position:absolute;inset-block-start:6px;inset-inline:0;margin:auto;width:38px;height:4px;
-  border-radius:99px;background:var(--line-2);
-}
-.dtitle{font-size:14.5px;font-weight:750;letter-spacing:-.01em}
-.dsub{font-size:12px;color:var(--ink-3)}
-.dchev{margin-inline-start:auto;color:var(--ink-3);transition:transform .28s var(--ease)}
-.drawer.open .dchev{transform:rotate(180deg)}
-.dfilters{display:flex;flex-direction:column;gap:7px;padding:0 14px 8px}
-.pool{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;
-  flex:1;overflow-y:auto;overscroll-behavior:contain;padding:2px 14px 18px;
-  display:grid;gap:7px;grid-template-columns:1fr;
-}
-@media(min-width:620px){.pool{grid-template-columns:1fr 1fr}}
-.poolgroup{
-  grid-column:1/-1;display:flex;align-items:center;gap:8px;
-  padding:10px 2px 2px;
-}
-.poolgroup .btime{
+/* group headers inside a list of results */
+.btime{
   font-size:11.5px;font-weight:750;color:var(--on-accent);background:var(--bc,var(--accent));
   padding:2px 9px;border-radius:5px;white-space:nowrap;
 }
-.poolgroup .btitle{font-size:12.5px;color:var(--ink-3)}
-.poolgroup .bcount{margin-inline-start:auto;font-size:11.5px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.btitle{font-size:12.5px;color:var(--ink-3)}
+.bcount{margin-inline-start:auto;font-size:11.5px;color:var(--ink-3);font-variant-numeric:tabular-nums}
 
 /* ---------- filters ---------- */
 .seg{display:flex;gap:3px;background:var(--sunken);border-radius:10px;padding:3px;overflow-x:auto;scrollbar-width:none}
@@ -331,7 +263,9 @@ button{cursor:pointer}
 .card{
   background:var(--surface);border:1px solid var(--line);border-radius:12px;
   padding:11px 13px;display:flex;flex-direction:column;gap:6px;box-shadow:var(--shadow);
-  touch-action:none;-webkit-user-select:none;user-select:none;
+  /* was touch-action:none for dragging; with drag gone it only blocked
+     scrolling, and the lists are wall-to-wall cards. */
+  -webkit-user-select:none;user-select:none;
   transition:transform .15s var(--ease),box-shadow .15s var(--ease);
 }
 .card:active{transform:scale(.99)}
@@ -455,13 +389,13 @@ body{overscroll-behavior-y:none}
 header{padding-top:env(safe-area-inset-top)}
 main{
   padding-inline:max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right));
-  padding-bottom:calc(96px + env(safe-area-inset-bottom));
+  padding-bottom:calc(28px + env(safe-area-inset-bottom));
 }
 .drawer{padding-bottom:env(safe-area-inset-bottom)}
 /* Cards are drag handles; without this iOS long-press pops the callout menu. */
 .card,.chip2{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 /* Let the lists scroll vertically — the JS decides when a drag wins. */
-.pool,.cards{touch-action:pan-y}
+.cards{touch-action:auto}
 /* 44px minimum for anything tappable, per Apple's own guidance. */
 .starbtn,.tab,.mini,.chip,.seg>button{min-height:44px;-webkit-tap-highlight-color:transparent}
 @media(max-width:620px){
@@ -533,8 +467,8 @@ main{
 /* area chips: place on top, drive time under it, count as a badge */
 .areaseg{flex-wrap:nowrap}
 .areaseg button{
-  flex-direction:column;gap:2px;align-items:flex-start;
-  padding:8px 12px;line-height:1.3;white-space:nowrap;
+  display:flex;flex-direction:column;align-items:flex-start;justify-content:center;
+  gap:2px;padding:8px 12px;line-height:1.3;white-space:nowrap;
 }
 .areaseg button .lsub{
   font-size:10.5px;font-weight:600;color:var(--ink-3);font-variant-numeric:tabular-nums;
@@ -635,24 +569,97 @@ main{
 /* inside the modal a card is for reading, not dragging */
 .bankbody .card{cursor:pointer}
 @media(max-width:620px){
-  #dlg-bank{width:100vw;max-height:100dvh;margin:0}
+  /* a <dialog> carries a UA max-width of calc(100% - 6px - 2em); without
+     overriding it, "width:100vw" is clamped and the sheet sits inset. */
+  #dlg-bank{
+    inset:0;margin:0;
+    width:100vw;max-width:none;
+    height:100dvh;max-height:none;
+  }
   .bankwrap{border-radius:0;border:0;max-height:100dvh;height:100dvh}
   .bankhead{padding-top:calc(14px + env(safe-area-inset-top))}
 }
 
 /* the hint rides along with the title but shouldn't compete with it */
-.dhint{font-weight:500;font-size:12.5px;color:var(--ink-3)}
 
 /* iPad and other tablets: give the drawer a slightly taller peek so the
    title and the chevron are both readable without opening it. */
-@media(min-width:621px) and (max-width:1180px){
-  .drawer.open .dtray{max-height:min(56dvh,520px)}
-  .dhandle{padding-block:12px 8px}
-}
 /* short viewports (landscape): leave room for the handle itself */
-@media(max-height:500px){
-  .drawer.open .dtray{max-height:min(62dvh,300px)}
+
+/* ===== app shell =====
+   The document must not grow past the visible area: when it does, an
+   auto-height iframe (the artifact preview) makes `position:fixed` resolve
+   against the whole document and anything pinned to the bottom disappears
+   below the fold. So the shell takes the height and `main` does the scrolling. */
+html{height:100%}
+body{height:100%;overflow:hidden}
+.app{
+  position:relative;                 /* anchor for the pinned children */
+  height:100%;
+  min-height:0;                      /* override the old min-height:100dvh */
+  display:flex;flex-direction:column;
+  overflow:hidden;
 }
+.topbar{flex:none}
+main{
+  flex:1 1 auto;min-height:0;
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;
+}
+/* pinned to the shell, not to the document */
+
+/* type chips: label and count side by side, same badge as the area row */
+.fline.scroll .seg button{display:flex;align-items:center}
+.fline.scroll .seg button .acount{
+  margin-inline-start:7px;flex:none;min-width:20px;padding:1px 6px;border-radius:999px;
+  background:var(--sunken);border:1px solid var(--line);
+  font-size:11px;font-weight:700;color:var(--ink-2);line-height:1.5;
+}
+.fline.scroll .seg button[aria-pressed="true"] .acount{
+  background:var(--accent);border-color:transparent;color:var(--on-accent);
+}
+
+/* ===== never trap the user in a modal =====
+   On a phone the bank fills the screen: no backdrop to tap, no Esc key. The
+   close button is the only way out, so it stays pinned even if the flex
+   layout above it ever fails again. */
+.bankhead,.atthead{
+  position:sticky;inset-block-start:0;z-index:2;
+  background:var(--surface);
+}
+.attclose{
+  min-width:44px;min-height:44px;      /* Apple's minimum tap target */
+  display:flex;align-items:center;justify-content:center;
+  font-size:19px;line-height:1;
+}
+.attclose:hover{background:var(--sunken);color:var(--ink)}
+.attclose:active{transform:scale(.94)}
+
+/* move dialog: make the two-step nature obvious */
+.movehint{font-size:12px;color:var(--ink-3);margin:-2px 0 8px;padding-inline-start:2px}
+.daypick button .mempty{opacity:.55;font-style:italic}
+
+/* A skip link that never appears is a trap: keyboard focus lands on it and
+   there is nothing to see. Reveal it while it holds focus. */
+.vh:focus,.vh:focus-visible{
+  position:fixed;inset-block-start:8px;inset-inline-start:8px;
+  width:auto;height:auto;clip:auto;overflow:visible;z-index:200;
+  padding:10px 16px;border-radius:10px;
+  background:var(--accent);color:var(--on-accent);font-weight:700;
+}
+
+/* my-dates modal */
+.dateinput{
+  width:100%;min-height:48px;padding:10px 14px;border-radius:12px;
+  border:1px solid var(--line);background:var(--raise);color:var(--ink);
+  font:inherit;font-size:16px;   /* 16px stops iOS zooming the page on focus */
+}
+.datesprev{
+  display:flex;flex-direction:column;gap:2px;margin-top:12px;padding:12px 14px;
+  background:var(--sunken);border-radius:12px;
+}
+.datesprev b{font-size:15px}
+.datesprev span{font-size:12.5px;color:var(--ink-3)}
 </style>
 
 <div class="app" dir="rtl">
@@ -663,7 +670,7 @@ main{
         <h1 class="brand">אוסטריה <em>·</em> הונגריה</h1>
         <div class="util">
           <button class="mini primary" id="btn-bank">🗺 בנק אטרקציות</button>
-          <button class="mini" id="btn-info">לא לשכוח</button>
+          <button class="mini" id="btn-dates">📅 התאריכים שלי</button>
           <button class="mini" id="btn-sync">שמירה</button>
         </div>
       </div>
@@ -686,21 +693,6 @@ main{
     <section id="view-austria" hidden></section>
     <section id="view-budapest" hidden></section>
   </main>
-
-  <aside class="drawer hidden" id="drawer" aria-label="מה אפשר לעשות">
-    <button class="dhandle" id="drawer-toggle" aria-expanded="false" aria-controls="pool">
-      <span class="bar" aria-hidden="true"></span>
-      <span><span class="dtitle">מה אפשר לעשות<span class="dhint"> (ניתן לגרור)</span></span>
-        <span class="dsub" id="pool-sub"></span></span>
-      <span class="dchev" aria-hidden="true">⌃</span>
-    </button>
-    <div class="dtray">
-      <div class="dfilters" id="pool-filters"></div>
-      <div class="pool" id="pool"></div>
-    </div>
-  </aside>
-
-  <div class="trash" id="trash" aria-hidden="true">🗑 גרור לכאן כדי להסיר</div>
 
   <dialog id="dlg-bank"><div class="bankwrap">
     <div class="bankhead">
@@ -727,8 +719,17 @@ main{
     <div class="dlgh"><div><h2 id="move-title">העברה ליום</h2><div class="sub" id="move-sub"></div></div><button data-close aria-label="סגור">✕</button></div>
     <div class="dlgb">
       <div class="fline" id="move-lane"></div>
+      <div class="movehint">בחר יעד, ואז הקש על היום</div>
       <div class="daypick" id="move-days"></div>
     </div>
+  </div></dialog>
+
+  <dialog id="dlg-dates"><div class="dlg">
+    <div class="dlgh"><div><h2>📅 התאריכים שלי</h2>
+      <div class="sub">הזז את כל הטיול לתאריכים אחרים</div></div>
+      <button class="attclose" data-close aria-label="סגור">✕</button></div>
+    <div class="dlgb" id="dates-body"></div>
+    <div class="attact" id="dates-act"></div>
   </div></dialog>
 
   <dialog id="dlg-info"><div class="dlg">
@@ -793,14 +794,14 @@ try {
 } catch (e) { /* unreadable store — start clean rather than break the page */ }
 const save = () => { try { STORE.set(KEY, JSON.stringify(S)); } catch (e) {} };
 
-const val = (day, f) => (S.edits[day.date] && f in S.edits[day.date]) ? S.edits[day.date][f] : day[f];
-const edited = (day, f) => !!(S.edits[day.date] && f in S.edits[day.date]);
+const val = (day, f) => (S.edits[dayKey(day)] && f in S.edits[dayKey(day)]) ? S.edits[dayKey(day)][f] : day[f];
+const edited = (day, f) => !!(S.edits[dayKey(day)] && f in S.edits[dayKey(day)]);
 function setVal(day, f, text) {
   const t = text.trim();
-  S.edits[day.date] = S.edits[day.date] || {};
-  if (t === (day[f] || "")) delete S.edits[day.date][f];
-  else S.edits[day.date][f] = t;
-  if (!Object.keys(S.edits[day.date]).length) delete S.edits[day.date];
+  S.edits[dayKey(day)] = S.edits[dayKey(day)] || {};
+  if (t === (day[f] || "")) delete S.edits[dayKey(day)][f];
+  else S.edits[dayKey(day)][f] = t;
+  if (!Object.keys(S.edits[dayKey(day)]).length) delete S.edits[dayKey(day)];
   save();
 }
 
@@ -863,13 +864,13 @@ function makeItem(text, kind) {
   };
 }
 function planOf(day) {
-  if (!S.plan[day.date]) {
-    S.plan[day.date] = {
+  if (!S.plan[dayKey(day)]) {
+    S.plan[dayKey(day)] = {
       plan: [makeItem(val(day, "pick"))].filter(Boolean),
       alt: [makeItem(val(day, "alt")), makeItem(val(day, "extra"))].filter(Boolean),
     };
   }
-  const p = S.plan[day.date];
+  const p = S.plan[dayKey(day)];
   p.plan = p.plan || []; p.alt = p.alt || [];
   return p;
 }
@@ -880,6 +881,10 @@ const itemFromAttraction = (a, kind) => ({
 });
 
 /* ================= helpers ================= */
+/* `main` owns the scrolling (see the app-shell rules), so anything that used
+   to move the window has to move this instead or it silently no-ops. */
+const scroller = () => document.getElementById("main") || document.scrollingElement;
+
 const el = (t, c, x) => { const n = document.createElement(t); if (c) n.className = c; if (x != null) n.textContent = x; return n; };
 const REGION_LABEL = { balaton: "בלטון", grundlsee: "גרונדלזה", obertraun: "אוברטראון", budapest: "בודפשט", home: "בית" };
 const FIT_LABEL = { good: "מתאים לשתיהן", partial: "בהתאמה", no: "לא לגילאים שלנו" };
@@ -967,199 +972,27 @@ function toast(msg, undo) {
 /* ================= drag engine ================= */
 /* Pointer-based so it works with a finger; every drag also has a button path
    (the ⋯ move dialog) because drag-only would strand keyboard users. */
-const DRAG_THRESHOLD = 8;
-let drag = null;
-let scrollRAF = null;
+/* Drag-and-drop was removed: on a phone it competed with scrolling, and the
+   hold-to-arm gesture it needed was undiscoverable. Everything it did is
+   available from the move dialog, which is reachable by tapping a card. */
 
-function beginDragCandidate(e, payload, srcNode) {
-  if (e.button != null && e.button !== 0) return;
-  if (e.target.closest("button, a, input, textarea")) return;
-  const start = { x: e.clientX, y: e.clientY };
-  const pid = e.pointerId;
-  const touch = e.pointerType === "touch";
-  let armed = false, dead = false, held = !touch, lastEv = e;
+function moveItemTo(item, from, target) {
+  const { date, lane } = target;
+  const dupe = planOf(dayByDate(date))[lane]
+    .some((x) => x.name === item.name && x.id !== item.id);
+  if (dupe) { toast(`${item.name} כבר ברשימה של ${date}`); return false; }
 
-  /* On a finger, a drag has to be asked for: hold still for a moment.
-     Otherwise every attempt to scroll the list would rip a card out. */
-  const holdTimer = touch ? setTimeout(() => {
-    held = true;
-    if (dead || armed) return;
-    armed = true;
-    if (navigator.vibrate) navigator.vibrate(8);
-    startDrag(lastEv, payload, srcNode);
-  }, 320) : null;
-
-  const stopHold = () => { if (holdTimer) clearTimeout(holdTimer); };
-
-  const move = (ev) => {
-    if (ev.pointerId !== pid || dead) return;
-    lastEv = ev;
-    if (!armed) {
-      const dx = Math.abs(ev.clientX - start.x), dy = Math.abs(ev.clientY - start.y);
-      if (touch && !held) {
-        /* moved before the hold landed → they meant to scroll */
-        if (dy > 8 || dx > 8) { dead = true; stopHold(); }
-        return;
-      }
-      if (Math.hypot(dx, dy) < DRAG_THRESHOLD) return;
-      armed = true;
-      startDrag(ev, payload, srcNode);
-    }
-    if (drag) updateDrag(ev);
-  };
-  const up = (ev) => {
-    if (ev.pointerId !== pid) return;
-    stopHold();
-    window.removeEventListener("pointermove", move);
-    window.removeEventListener("pointerup", up);
-    window.removeEventListener("pointercancel", up);
-    if (drag) endDrag(ev);
-    else if (!dead && !armed && payload.item && payload.item.name) {
-      /* a clean tap: show the detail sheet */
-      const rec = AUT_BY_NAME.get(payload.item.name)
-        || DATA.budapest.find((b) => b.name === payload.item.name);
-      if (rec) openAttraction(rec, AUT_BY_NAME.has(payload.item.name) ? "austria" : "budapest");
-    }
-  };
-  window.addEventListener("pointermove", move, { passive: true });
-  srcNode.addEventListener("contextmenu", (ev) => ev.preventDefault(), { once: true });
-  window.addEventListener("pointerup", up);
-  window.addEventListener("pointercancel", up);
-}
-
-function startDrag(e, payload, srcNode) {
-  const r = srcNode.getBoundingClientRect();
-  const ghost = srcNode.cloneNode(true);
-  ghost.classList.add("chip2", "dragging");
-  ghost.classList.remove("card", "fav");
-  ghost.style.width = Math.min(r.width, 330) + "px";
-  ghost.style.insetInlineStart = "0";
-  ghost.style.insetBlockStart = "0";
-  document.body.appendChild(ghost);
-
-  const ph = el("div", "slot-ph");
-  ph.style.height = (payload.from ? r.height : 48) + "px";
-
-  drag = {
-    payload, ghost, ph, srcNode,
-    dx: e.clientX - r.left, dy: e.clientY - r.top,
-    zone: null, moved: false,
-  };
-  if (payload.from) srcNode.classList.add("ghosted");
-  if (navigator.vibrate) navigator.vibrate(8);
-  document.querySelector(".app").classList.add("dragmode");
-  document.getElementById("trash").classList.toggle("on", !!payload.from);
-  if (drawerEl.classList.contains("open")) setDrawer(false);
-  updateDrag(e);
-}
-
-function updateDrag(e) {
-  const g = drag.ghost;
-  g.style.transform = `translate3d(${e.clientX - drag.dx}px,${e.clientY - drag.dy}px,0) scale(1.02) rotate(-.6deg)`;
-
-  const trash = document.getElementById("trash");
-  const tr = trash.getBoundingClientRect();
-  const overTrash = drag.payload.from && e.clientX > tr.left && e.clientX < tr.right
-    && e.clientY > tr.top && e.clientY < tr.bottom;
-  trash.classList.toggle("over", overTrash);
-  if (overTrash) { clearZone(); drag.zone = "trash"; return; }
-
-  const under = document.elementFromPoint(e.clientX, e.clientY);
-  const lane = under && under.closest(".lane");
-  if (!lane) { clearZone(); drag.zone = null; }
-  else {
-    if (drag.zone !== lane) { clearZone(); drag.zone = lane; lane.classList.add("over"); }
-    placePlaceholder(lane, e.clientY);
+  if (from) {
+    const it = takeItem(from);
+    if (!it) return false;
+    putItem(target, it, target.idx);
+  } else {
+    putItem(target, item, target.idx);
+    if (navigator.vibrate) navigator.vibrate(10);
   }
-  autoScroll(e.clientY);
-}
-
-function clearZone() {
-  document.querySelectorAll(".lane.over").forEach((l) => l.classList.remove("over"));
-  if (drag && drag.ph.parentNode) drag.ph.remove();
-}
-
-function placePlaceholder(lane, y) {
-  const slots = lane.querySelector(".slots");
-  const hint = slots.querySelector(".dropempty");
-  if (hint) hint.style.display = "none";
-  const chips = [...slots.querySelectorAll(".chip2:not(.dragging)")]
-    .filter((c) => c !== drag.srcNode);
-  const after = chips.find((c) => {
-    const r = c.getBoundingClientRect();
-    return y < r.top + r.height / 2;
-  });
-  if (after) slots.insertBefore(drag.ph, after);
-  else slots.appendChild(drag.ph);
-}
-
-function autoScroll(y) {
-  // the top band has to clear the sticky header, or a drag stalls under it
-  const TOP = (document.querySelector(".topbar").offsetHeight || 0) + 30;
-  const BOT = 130, MAX = 16;
-  let v = 0;
-  if (y < TOP) v = -MAX * (1 - y / TOP);
-  else if (y > innerHeight - BOT) v = MAX * (1 - (innerHeight - y) / BOT);
-  if (!v) { if (scrollRAF) { cancelAnimationFrame(scrollRAF); scrollRAF = null; } return; }
-  if (scrollRAF) return;
-  const step = () => {
-    if (!drag) { scrollRAF = null; return; }
-    scrollBy(0, v);
-    scrollRAF = requestAnimationFrame(step);
-  };
-  scrollRAF = requestAnimationFrame(step);
-}
-
-function endDrag(e) {
-  const { payload, ghost, ph, zone } = drag;
-  if (scrollRAF) { cancelAnimationFrame(scrollRAF); scrollRAF = null; }
-  document.querySelector(".app").classList.remove("dragmode");
-  document.getElementById("trash").classList.remove("on", "over");
-  if (drag.srcNode) drag.srcNode.classList.remove("ghosted");
-
-  let done = false;
-  if (zone === "trash" && payload.from) {
-    const removed = takeItem(payload.from);
-    if (removed) {
-      save(); done = true;
-      toast(`${removed.name} הוסר`, () => { putItem(payload.from, removed, payload.from.idx); save(); renderBoard(); });
-    }
-  } else if (zone && zone !== "trash") {
-    const date = zone.dataset.date, laneName = zone.dataset.lane;
-    const slots = zone.querySelector(".slots");
-    const idx = [...slots.children].filter((c) => c.classList.contains("chip2") || c === ph).indexOf(ph);
-    const target = { date, lane: laneName, idx: idx < 0 ? 0 : idx };
-    const name = payload.item.name;
-    const dupe = planOf(dayByDate(date))[laneName]
-      .some((x) => x.name === name && x.id !== payload.item.id);
-    if (dupe) {
-      ghost.remove(); if (ph.parentNode) ph.remove(); clearZone(); drag = null;
-      document.querySelectorAll(".dropempty").forEach((h) => (h.style.display = ""));
-      toast(`${name} כבר ברשימה של ${date}`);
-      return;
-    }
-    if (payload.from) {
-      const it = takeItem(payload.from);
-      if (it) {
-        let i = target.idx;
-        if (payload.from.date === date && payload.from.lane === laneName && payload.from.idx < i) i--;
-        putItem(target, it, i);
-        done = true;
-      }
-    } else {
-      putItem(target, payload.item, target.idx);
-      done = true;
-      if (navigator.vibrate) navigator.vibrate(12);
-    }
-    if (done) { save(); toast(`${payload.item ? payload.item.name : ""} → ${date}`.trim()); }
-  }
-
-  ghost.remove();
-  if (ph.parentNode) ph.remove();
-  clearZone();
-  drag = null;
-  if (done) renderBoard();
-  else document.querySelectorAll(".dropempty").forEach((h) => (h.style.display = ""));
+  save();
+  toast(`${item.name} → ${date}`);
+  return true;
 }
 
 function takeItem(ref) {
@@ -1172,7 +1005,6 @@ function putItem(ref, item, idx) {
 }
 
 /* ================= board ================= */
-const drawerEl = document.getElementById("drawer");
 
 function dayLoad(day) {
   const items = planOf(day).plan.filter((i) => i.kind === "austria" && i.mins);
@@ -1184,8 +1016,7 @@ function itemChip(item, ref) {
   const c = el("div", "chip2");
   c.tabIndex = 0;
   c.setAttribute("role", "button");
-  c.setAttribute("aria-label", `${item.name}. גרור כדי להעביר, או הקש Enter לבחירת יום`);
-  c.appendChild(el("span", "grip", "⋮⋮"));
+  c.setAttribute("aria-label", `${item.name}. הקש כדי להעביר ליום אחר`);
   const b = el("span", "cbody");
   b.appendChild(el("span", "cn", item.name));
   const s = el("span", "cs");
@@ -1204,7 +1035,7 @@ function itemChip(item, ref) {
   });
   c.appendChild(x);
 
-  c.addEventListener("pointerdown", (e) => beginDragCandidate(e, { from: ref, item }, c));
+  c.addEventListener("click", () => openMove(item, ref));
   c.addEventListener("keydown", (e) => {
     if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openMove(item, ref); }
     if (e.key === "Delete" || e.key === "Backspace") {
@@ -1234,13 +1065,13 @@ function laneEl(day, laneName, label, emptyText) {
 
 function renderBoard() {
   const host = document.getElementById("view-board");
-  const y = window.scrollY;
+  const y = scroller().scrollTop;
   host.innerHTML = "";
 
   const hint = el("div", "boardhint");
   hint.appendChild(el("span", null, "🖐"));
   const ht = el("span");
-  ht.innerHTML = "פתח את <b>«מה אפשר לעשות»</b> למטה וגרור כרטיס אל יום. אפשר גם לגרור בין ימים, "
+  ht.innerHTML = "פתח את <b>«בנק אטרקציות»</b> למעלה, הקש על מקום ובחר <b>«לשבץ ליום»</b>. "
     + "בין «התוכנית» ל«חלופות», או החוצה כדי להסיר. בלי עכבר? הקש על כרטיס ובחר יום מהרשימה.";
   hint.appendChild(ht);
   host.appendChild(hint);
@@ -1275,17 +1106,16 @@ function renderBoard() {
     a.appendChild(h);
 
     const lanes = el("div", "lanes");
-    lanes.appendChild(laneEl(day, "plan", "התוכנית", "גרור לכאן אטרקציה"));
+    lanes.appendChild(laneEl(day, "plan", "התוכנית", "עדיין ריק — הוסף מבנק האטרקציות"));
     lanes.appendChild(laneEl(day, "alt", "חלופות", "מקום לגיבוי"));
     a.appendChild(lanes);
     board.appendChild(a);
   });
   host.appendChild(board);
-  window.scrollTo(0, y);
+  scroller().scrollTop = y;
 }
 
 /* ================= pool drawer ================= */
-const PF = { source: "austria", maxDrive: null, area: null, hl: null, fit: "ok", q: "", favOnly: false };
 /* "area" = Tal's view (group by corner of the map); "drive" = the old one. */
 let GROUP_BY = STORE.get("groupBy") || "area";
 const setGroupBy = (v) => { GROUP_BY = v; STORE.set("groupBy", v); };
@@ -1508,6 +1338,46 @@ function areaPresence(items) {
   return { byArea, total: items.length };
 }
 
+/* A complete partition of the bank — order matters, first match wins, and
+   "אטרקציות" is deliberately last so it catches whatever is left. */
+const TYPES = [
+  { id: "bike",   label: "\uD83D\uDEB4 אופניים",
+    test: (a) => /אופניים|Radweg|Bicycle|Ostufer|Koppental|Chorinsky/i.test(a.name + " " + a.cat) },
+  { id: "coaster", label: "\uD83D\uDEF7 מזחלות הרים",
+    test: (a) => /Coaster|Flitzer|Rodelbahn|מגלש/i.test(a.name + " " + a.cat) },
+  { id: "food",    label: "\uD83C\uDF5D מסעדות",
+    test: (a) => /מסעד|פיצ|קפה/.test(a.cat || "") },
+  { id: "play",    label: "\uD83C\uDFA0 גני שעשועים",
+    test: (a) => /פארקי שעשועים|פארקי משחקים/.test(a.cat || "") },
+  { id: "sights",  label: "\u2B50 אטרקציות", test: () => true },
+];
+const typeOf = (a) => (TYPES.find((t) => t.test(a)) || TYPES[TYPES.length - 1]).id;
+
+/* the full row: הכל + one chip per type, each with a live count */
+function typeLine(state, src, onChange) {
+  const line = el("div", "fline scroll");
+  line.appendChild(el("span", "flab", "סוג"));
+  const seg = el("div", "seg");
+
+  const mk = (id, label, n) => {
+    const b = el("button");
+    b.appendChild(el("span", null, label));
+    b.appendChild(el("span", "acount", String(n)));
+    b.setAttribute("aria-pressed", state.type === id ? "true" : "false");
+    b.setAttribute("aria-label", `${label} — ${n} מקומות`);
+    b.addEventListener("click", () => { state.type = state.type === id ? null : id; onChange(); });
+    seg.appendChild(b);
+  };
+
+  mk(null, "הכל", src.length);
+  TYPES.forEach((t) => {
+    const n = src.filter((a) => typeOf(a) === t.id).length;
+    if (n) mk(t.id, t.label, n);
+  });
+  line.appendChild(seg);
+  return line;
+}
+
 /* one-tap "just show me the bikes / just the coasters" */
 function highlightLine(state, src, onChange) {
   const line = el("div", "fline");
@@ -1540,119 +1410,6 @@ function groupToggle(onChange) {
   return line;
 }
 
-function poolItems() {
-  const src = PF.source === "austria" ? DATA.austria : DATA.budapest;
-  const q = PF.q.trim().toLowerCase();
-  return src.filter((a) => {
-    if (PF.favOnly && !S.favs[a.name]) return false;
-    if (PF.source === "austria") {
-      if (PF.hl && (highlightOf(a) || {}).id !== PF.hl) return false;
-      if (GROUP_BY === "area") { if (PF.area && areaOf(a) !== PF.area) return false; }
-      else if (PF.maxDrive && a.mins > PF.maxDrive) return false;
-      if (PF.fit === "good" && a.fit !== "good") return false;
-      if (PF.fit === "ok" && a.fit === "no") return false;
-    }
-    if (q && !(a.name + " " + a.note + " " + (a.region || a.where || "")).toLowerCase().includes(q)) return false;
-    return true;
-  });
-}
-
-function poolCard(a) {
-  const kind = PF.source;
-  const c = el("div", "chip2");
-  c.tabIndex = 0;
-  c.setAttribute("role", "button");
-  c.setAttribute("aria-label", `${a.name}. גרור אל יום, או הקש Enter לבחירת יום`);
-  c.appendChild(el("span", "grip", "⋮⋮"));
-  const b = el("span", "cbody");
-  const hl2 = kind === "austria" ? highlightOf(a) : null;
-  if (hl2) { c.classList.add("hl", "hl-" + hl2.id); }
-  b.appendChild(el("span", "cn", (hl2 ? hl2.short + " " : "") + a.name));
-  const s = el("span", "cs");
-  s.appendChild(el("span", "mins", kind === "austria" ? a.dist : (a.mins == null ? "נסיעה" : `${a.mins} דק' הליכה`)));
-  if (a.fit) s.appendChild(el("span", null, FIT_LABEL[a.fit]));
-  if (a.sources > 1) s.appendChild(el("span", null, `${a.sources} המלצות`));
-  b.appendChild(s);
-  c.appendChild(b);
-  c.addEventListener("pointerdown", (e) =>
-    beginDragCandidate(e, { item: itemFromAttraction(a, kind) }, c));
-  c.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openAttraction(a, kind); }
-  });
-  return c;
-}
-
-function renderPool() {
-  const host = document.getElementById("pool");
-  const items = poolItems();
-  document.getElementById("pool-sub").textContent =
-    `${items.length} ${PF.source === "austria" ? (GROUP_BY === "area" ? "באוסטריה — לפי אזור" : "באוסטריה — לפי זמן נסיעה מהבסיס") : "בבודפשט — לפי זמן הליכה מהמלון"}`;
-  host.innerHTML = "";
-  if (!items.length) {
-    host.appendChild(el("div", "empty", "אין אטרקציות שעונות על הסינון. נסה להרחיב את זמן הנסיעה או לנקות את החיפוש."));
-    return;
-  }
-  renderGrouped(host, items, PF.source, (a) => poolCard(a), false);
-}
-
-function renderPoolFilters() {
-  const f = document.getElementById("pool-filters");
-  f.innerHTML = "";
-  const search = el("input", "search");
-  search.type = "search";
-  search.placeholder = "חיפוש אטרקציה…";
-  search.value = PF.q;
-  search.setAttribute("aria-label", "חיפוש אטרקציה במאגר");
-  search.addEventListener("input", () => { PF.q = search.value; renderPool(); });
-  f.appendChild(search);
-
-  const l1 = el("div", "fline");
-  const src = el("div", "seg");
-  [["austria", "אוסטריה"], ["budapest", "בודפשט"]].forEach(([v, t]) => {
-    const b = el("button", null, t);
-    b.setAttribute("aria-pressed", PF.source === v ? "true" : "false");
-    b.addEventListener("click", () => { PF.source = v; renderPoolFilters(); renderPool(); });
-    src.appendChild(b);
-  });
-  l1.appendChild(src);
-  const fav = el("button", "chip", "★ מועדפים");
-  fav.setAttribute("aria-pressed", PF.favOnly ? "true" : "false");
-  fav.addEventListener("click", () => { PF.favOnly = !PF.favOnly; renderPoolFilters(); renderPool(); });
-  l1.appendChild(fav);
-  f.appendChild(l1);
-
-  if (PF.source === "austria") {
-    const redraw = () => { renderPoolFilters(); renderPool(); };
-    f.appendChild(groupToggle(redraw));
-    f.appendChild(highlightLine(PF, DATA.austria, redraw));
-    if (GROUP_BY === "area") {
-      const keep = PF.area; PF.area = null;
-      const present = areaPresence(poolItems());
-      PF.area = keep;
-      f.appendChild(areaFilterLine(PF, present, redraw));
-    } else {
-      const l2 = el("div", "fline");
-      l2.appendChild(el("span", "flab", "עד"));
-      const seg = el("div", "seg");
-      [[null, "הכל"], [15, "15 דק'"], [45, "45 דק'"], [60, "שעה"], [90, "שעה וחצי"], [120, "שעתיים"]]
-        .forEach(([v, t]) => {
-          const b = el("button", null, t);
-          b.setAttribute("aria-pressed", PF.maxDrive === v ? "true" : "false");
-          b.addEventListener("click", () => { PF.maxDrive = v; redraw(); });
-          seg.appendChild(b);
-        });
-      l2.appendChild(seg);
-      f.appendChild(l2);
-    }
-  }
-}
-
-function setDrawer(open) {
-  drawerEl.classList.toggle("open", open);
-  document.getElementById("drawer-toggle").setAttribute("aria-expanded", open ? "true" : "false");
-}
-document.getElementById("drawer-toggle")
-  .addEventListener("click", () => setDrawer(!drawerEl.classList.contains("open")));
 
 /* ================= move dialog (the keyboard / no-drag path) ================= */
 let moveCtx = null, moveLane = "plan";
@@ -1671,31 +1428,44 @@ function openMove(item, from) {
     b.addEventListener("click", () => {
       moveLane = v;
       [...seg.children].forEach((c) => c.setAttribute("aria-pressed", c === b ? "true" : "false"));
+      drawMoveDays();          /* the previews below must follow the choice */
     });
     seg.appendChild(b);
   });
   lanePick.appendChild(seg);
 
+  drawMoveDays();
+  document.getElementById("dlg-move").showModal();
+}
+
+/* Split out so the lane toggle can redraw it: which day is "free" depends
+   entirely on whether you are filling the plan or the alternatives. */
+function drawMoveDays() {
   const host = document.getElementById("move-days");
   host.innerHTML = "";
   DATA.days.forEach((d) => {
     const b = el("button");
     b.style.setProperty("--rc", `var(--${d.region})`);
     b.appendChild(el("b", null, `${d.date} · ${d.dow}`));
-    const cur = planOf(d).plan[0];
-    b.appendChild(el("span", null, cur ? cur.name : "— ריק —"));
+    const inLane = planOf(d)[moveLane] || [];
+    const names = inLane.map((x) => x.name).join(" · ");
+    const line = el("span", null, names || "— ריק —");
+    if (!names) line.classList.add("mempty");
+    b.appendChild(line);
     b.addEventListener("click", () => {
-      const it = moveCtx.from ? takeItem(moveCtx.from) : moveCtx.item;
-      putItem({ date: d.date, lane: moveLane }, it, planOf(d)[moveLane].length);
-      save();
-      document.getElementById("dlg-move").close();
+      /* moveItemTo carries the duplicate guard the old drag path had */
+      const ok = moveItemTo(moveCtx.item, moveCtx.from,
+        { date: d.date, lane: moveLane, idx: planOf(d)[moveLane].length });
+      /* Close the whole stack — bank and sheet sit above the board, and
+         leaving them open made a successful assignment look like nothing
+         had happened. */
+      document.querySelectorAll("dialog[open]").forEach((x) => x.close());
+      if (!ok) return;
       show("board");
       renderBoard();
-      toast(`${it.name} → ${d.date}`);
     });
     host.appendChild(b);
   });
-  document.getElementById("dlg-move").showModal();
 }
 
 /* ================= itinerary detail ================= */
@@ -1888,10 +1658,10 @@ function dayCard(day, i) {
   ts.appendChild(add);
   body.appendChild(ts);
 
-  if (S.edits[day.date]) {
+  if (S.edits[dayKey(day)]) {
     const rst = el("button", "tiny danger", "שחזר את היום מהגיליון");
     rst.addEventListener("click", () => {
-      delete S.edits[day.date]; delete S.plan[day.date];
+      delete S.edits[dayKey(day)]; delete S.plan[dayKey(day)];
       save(); renderDays(); renderBoard(); toast("היום שוחזר למקור");
     });
     body.appendChild(el("div", "dact")).appendChild(rst);
@@ -1920,7 +1690,7 @@ function renderDays() {
 }
 
 /* ================= library tabs ================= */
-const LF = { maxDrive: null, area: null, hl: null, fit: "all", cat: null, q: "", favOnly: false };
+const LF = { maxDrive: null, area: null, type: null, fit: "all", cat: null, q: "", favOnly: false };
 
 function libCard(a, kind) {
   const c = el("div", "card" + (S.favs[a.name] ? " fav" : ""));
@@ -1931,7 +1701,7 @@ function libCard(a, kind) {
   star.setAttribute("aria-label", `סמן את ${a.name} כמועדף`);
   star.addEventListener("click", () => {
     if (S.favs[a.name]) delete S.favs[a.name]; else S.favs[a.name] = true;
-    save(); renderLibrary(kind); renderPool();
+    save(); renderLibrary(kind);
   });
   top.appendChild(star);
   c.appendChild(top);
@@ -1983,7 +1753,15 @@ function libCard(a, kind) {
   act.appendChild(map);
   c.appendChild(act);
 
-  c.addEventListener("pointerdown", (e) => beginDragCandidate(e, { item: itemFromAttraction(a, kind) }, c));
+  c.setAttribute("role", "button");
+  c.tabIndex = 0;
+  c.addEventListener("click", (ev) => {
+    if (ev.target.closest("button, a")) return;   // star / site link keep their own job
+    openAttraction(a, kind);
+  });
+  c.addEventListener("keydown", (ev) => {
+    if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); openAttraction(a, kind); }
+  });
   return c;
 }
 
@@ -2005,7 +1783,7 @@ function renderLibrary(kind) {
 
   if (kind === "austria") {
     f.appendChild(groupToggle(() => renderLibrary(kind)));
-    f.appendChild(highlightLine(LF, src, () => renderLibrary(kind)));
+    f.appendChild(typeLine(LF, src, () => renderLibrary(kind)));
     if (GROUP_BY === "area") {
       const keep = LF.area; LF.area = null;
       const present = areaPresence(src.filter((a) => {
@@ -2072,7 +1850,7 @@ function renderLibrary(kind) {
     const items = src.filter((a) => {
       if (LF.favOnly && !S.favs[a.name]) return false;
       if (kind === "austria") {
-        if (LF.hl && (highlightOf(a) || {}).id !== LF.hl) return false;
+        if (LF.type && typeOf(a) !== LF.type) return false;
         if (GROUP_BY === "area") { if (LF.area && areaOf(a) !== LF.area) return false; }
         else if (LF.maxDrive && a.mins > LF.maxDrive) return false;
         if (LF.fit === "good" && a.fit !== "good") return false;
@@ -2137,7 +1915,6 @@ function openAttraction(a, kind) {
     if (S.favs[a.name]) delete S.favs[a.name]; else S.favs[a.name] = true;
     save();
     fav.textContent = S.favs[a.name] ? "★ במועדפים" : "☆ למועדפים";
-    renderPool();
     if (view === "austria" || view === "budapest") renderLibrary(view);
   });
   act.appendChild(fav);
@@ -2162,7 +1939,7 @@ function openAttraction(a, kind) {
 /* Same data and grouping as the library tab, but presented as a modal you
    summon deliberately. Cards here open the detail sheet instead of being
    drag handles — you can't drop onto a board you can't see. */
-const BF = { source: "austria", area: null, hl: null, fit: "ok", q: "", favOnly: false };
+const BF = { source: "austria", area: null, type: null, fit: "ok", q: "", favOnly: false };
 
 function bankItems() {
   const src = BF.source === "austria" ? DATA.austria : DATA.budapest;
@@ -2170,7 +1947,7 @@ function bankItems() {
   return src.filter((a) => {
     if (BF.favOnly && !S.favs[a.name]) return false;
     if (BF.source === "austria") {
-      if (BF.hl && (highlightOf(a) || {}).id !== BF.hl) return false;
+      if (BF.type && typeOf(a) !== BF.type) return false;
       if (BF.area && areaOf(a) !== BF.area) return false;
       if (BF.fit === "good" && a.fit !== "good") return false;
       if (BF.fit === "ok" && a.fit === "no") return false;
@@ -2220,7 +1997,7 @@ function renderBankFilters() {
   [["austria", "אוסטריה"], ["budapest", "בודפשט"]].forEach(([v, t]) => {
     const b = el("button", null, t);
     b.setAttribute("aria-pressed", BF.source === v ? "true" : "false");
-    b.addEventListener("click", () => { BF.source = v; BF.area = null; BF.hl = null; redraw(); });
+    b.addEventListener("click", () => { BF.source = v; BF.area = null; BF.type = null; redraw(); });
     src.appendChild(b);
   });
   l1.appendChild(src);
@@ -2231,7 +2008,7 @@ function renderBankFilters() {
   f.appendChild(l1);
 
   if (BF.source === "austria") {
-    f.appendChild(highlightLine(BF, DATA.austria, redraw));
+    f.appendChild(typeLine(BF, DATA.austria, redraw));
     const keep = BF.area; BF.area = null;
     const present = areaPresence(bankItems());
     BF.area = keep;
@@ -2263,6 +2040,111 @@ function openBank() {
   document.getElementById("dlg-bank").showModal();
 }
 
+/* ================= trip dates ================= */
+/* Each day keeps the date it shipped with as its identity, so moving the trip
+   never detaches what has already been planned onto it. */
+const DOW_HE = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"];
+const dayKey = (d) => d.baseIso || d.iso;
+
+DATA.days.forEach((d) => { d.baseIso = d.baseIso || d.iso; });
+const BASE_START = DATA.days[0].baseIso;
+
+const addDays = (iso, n) => {
+  const [y, m, dd] = iso.split("-").map(Number);
+  const t = new Date(y, m - 1, dd + n);
+  return {
+    iso: `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, "0")}-${String(t.getDate()).padStart(2, "0")}`,
+    date: `${String(t.getDate()).padStart(2, "0")}.${String(t.getMonth() + 1).padStart(2, "0")}`,
+    dow: DOW_HE[t.getDay()],
+    sunday: t.getDay() === 0,
+  };
+};
+
+/* Recompute every visible date from the stored offset. */
+function applyDateOffset() {
+  const off = S.dateOffset || 0;
+  DATA.days.forEach((d) => {
+    const s = addDays(d.baseIso, off);
+    d.iso = s.iso; d.date = s.date; d.dow = s.dow; d.isSunday = s.sunday;
+  });
+}
+
+/* Days whose notes mention shopping — the reason Sundays matter in Austria. */
+const shoppingDays = () => DATA.days.filter((d) => /קניות|סופר|לקנות/.test(d.shop || ""));
+
+function openDates() {
+  const dlg = document.getElementById("dlg-dates");
+  const body = document.getElementById("dates-body");
+  body.innerHTML = "";
+
+  const cur = DATA.days[0].iso;
+  body.appendChild(el("div", "lab", "יום היציאה"));
+  const inp = el("input", "dateinput");
+  inp.type = "date";
+  inp.value = cur;
+  inp.setAttribute("aria-label", "בחר את תאריך היציאה");
+  body.appendChild(inp);
+
+  const preview = el("div", "datesprev");
+  body.appendChild(preview);
+  const warn = el("div", "warnbox");
+  warn.hidden = true;
+  body.appendChild(warn);
+
+  const draw = (startIso) => {
+    const off = Math.round(
+      (new Date(startIso) - new Date(BASE_START)) / 86400000);
+    const first = addDays(BASE_START, off);
+    const last = addDays(DATA.days[DATA.days.length - 1].baseIso, off);
+    preview.innerHTML = "";
+    preview.appendChild(el("b", null,
+      `${first.date} · ${first.dow}  →  ${last.date} · ${last.dow}`));
+    preview.appendChild(el("span", null, `${DATA.days.length} ימים`));
+
+    /* Austrian shops shut on Sunday; if a shopping day lands there, say so. */
+    const clashes = shoppingDays()
+      .map((d) => addDays(d.baseIso, off))
+      .filter((s) => s.sunday);
+    warn.hidden = !clashes.length;
+    warn.innerHTML = "";
+    if (clashes.length) {
+      warn.appendChild(el("span", null, "\u26A0\uFE0F"));
+      warn.appendChild(el("span", null,
+        `יום קניות נופל על יום ראשון (${clashes.map((c) => c.date).join(", ")}) — ` +
+        `באוסטריה הסופרים סגורים. שווה להזיז את הקניות.`));
+    }
+    return off;
+  };
+
+  let pending = draw(cur);
+  inp.addEventListener("input", () => { if (inp.value) pending = draw(inp.value); });
+
+  const act = document.getElementById("dates-act");
+  act.innerHTML = "";
+
+  const reset = el("button", null, "חזרה למקורי");
+  reset.addEventListener("click", () => {
+    S.dateOffset = 0; save(); applyDateOffset();
+    renderLegBar(); show(current || "board"); dlg.close();
+    toast("התאריכים חזרו למקור");
+  });
+  act.appendChild(reset);
+
+  const apply = el("button", "primary", "עדכן תאריכים");
+  apply.addEventListener("click", () => {
+    S.dateOffset = pending; save(); applyDateOffset();
+    renderLegBar(); show(current || "board"); dlg.close();
+    toast(`הטיול הוזז ל-${DATA.days[0].date}`);
+  });
+  act.appendChild(apply);
+
+  const info = el("button", null, "\uD83E\uDDF3 לא לשכוח");
+  info.addEventListener("click", () => { dlg.close(); fillInfo(); });
+  act.insertBefore(info, act.firstChild);
+
+  dlg.showModal();
+}
+
 /* ================= dialogs ================= */
 document.querySelectorAll("[data-close]").forEach((b) =>
   b.addEventListener("click", () => b.closest("dialog").close()));
@@ -2284,7 +2166,8 @@ document.querySelectorAll("dialog").forEach((dlg) => {
    It was only reachable by noticing the small handle at the bottom. */
 document.getElementById("btn-bank").addEventListener("click", openBank);
 
-document.getElementById("btn-info").addEventListener("click", () => {
+document.getElementById("btn-dates").addEventListener("click", openDates);
+function fillInfo() {
   const b = document.getElementById("info-body");
   b.innerHTML = "";
   const w = el("div", "warnbox");
@@ -2321,7 +2204,7 @@ document.getElementById("btn-info").addEventListener("click", () => {
   b.appendChild(list);
   b.appendChild(el("p", "note", "זמני הנסיעה של אטרקציות אוסטריה נמדדים מהבסיס באוברטראון. בימי בלטון ובודפשט הם לא רלוונטיים."));
   document.getElementById("dlg-info").showModal();
-});
+}
 
 if (!STORE.persistent) {
   window.addEventListener("DOMContentLoaded", () => {
@@ -2390,12 +2273,11 @@ function show(view, fromHash) {
   document.querySelectorAll(".tab").forEach((t) =>
     t.setAttribute("aria-selected", t.dataset.view === view ? "true" : "false"));
   VIEWS.forEach((v) => (document.getElementById("view-" + v).hidden = v !== view));
-  drawerEl.classList.toggle("hidden", view !== "board");
   renderLegBar();
   if (view === "board") renderBoard();
   if (view === "days") renderDays();
   if (view === "austria" || view === "budapest") renderLibrary(view);
-  if (!fromHash) { syncHash(); window.scrollTo(0, 0); }
+  if (!fromHash) { syncHash(); scroller().scrollTop = 0; }
 }
 document.querySelectorAll(".tab").forEach((t) =>
   t.addEventListener("click", () => show(t.dataset.view)));
@@ -2407,14 +2289,24 @@ window.addEventListener("hashchange", () => {
 
 document.getElementById("n-aut").textContent = DATA.austria.length;
 document.getElementById("n-bud").textContent = DATA.budapest.length;
-renderPoolFilters();
-renderPool();
+applyDateOffset();
 (function boot() {
   let v = "", l = "";
   try { [v, l] = location.hash.slice(1).split("/"); } catch (e) { /* sandbox */ }
   if (l && LEGS[l]) LEG = l;
   show(v || "board", true);
 })();
+
+/* ================= offline ================= */
+/* Registered late and guarded: a failure here must never stop the app from
+   rendering. file:// and the artifact sandbox have no worker at all. */
+if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").catch(() => {
+      /* no offline support here — the planner still works online */
+    });
+  });
+}
 </script>
 </body>
 </html>
