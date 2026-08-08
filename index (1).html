@@ -1,0 +1,2125 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<!-- viewport-fit=cover so the notch/home-bar areas are ours to pad -->
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0d7168" media="(prefers-color-scheme:light)">
+<meta name="theme-color" content="#0b1312" media="(prefers-color-scheme:dark)">
+<!-- add-to-home-screen: Safari needs the apple-* pair, the rest read the manifest -->
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="הטיול">
+<meta name="format-detection" content="telephone=no">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%230d7168'/%3E%3Cpath d='M30 122l32-44 24 30 18-22 46 60z' fill='%23bfe6df'/%3E%3Ccircle cx='128' cy='50' r='16' fill='%23f2c14e'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%230d7168'/%3E%3Cpath d='M30 122l32-44 24 30 18-22 46 60z' fill='%23bfe6df'/%3E%3Ccircle cx='128' cy='50' r='16' fill='%23f2c14e'/%3E%3C/svg%3E">
+<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22%D7%90%D7%95%D7%A1%D7%98%D7%A8%D7%99%D7%94-%D7%94%D7%95%D7%A0%D7%92%D7%A8%D7%99%D7%94%22%2C%22short_name%22%3A%22%D7%94%D7%98%D7%99%D7%95%D7%9C%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23e9ece9%22%2C%22theme_color%22%3A%22%230d7168%22%2C%22dir%22%3A%22rtl%22%2C%22lang%22%3A%22he%22%7D">
+<title>אוסטריה־הונגריה · לוח הטיול</title>
+
+<style>
+/* Palette: Salzkammergut lake water against limestone. One accent (lake teal),
+   semantic warn/crit kept separate from it, and a hue per trip base. */
+:root, :root[data-theme="light"]{
+  --ground:#e9ece9; --surface:#f8f9f7; --sunken:#dee3df; --raise:#ffffff;
+  --ink:#12201e; --ink-2:#485754; --ink-3:#54625c;
+  --line:#808e89; --line-2:#6b7873;
+  --accent:#0d7168; --accent-soft:#d3e7e3; --accent-ink:#08453f; --on-accent:#ffffff;
+  --warn:#8a5709; --warn-soft:#f4e6cf;
+  --crit:#9c352d; --crit-soft:#f3dbd8;
+  --balaton:#8f6716; --grundlsee:#25706a; --obertraun:#1f556e;
+  --budapest:#6b4480; --home:#5f6e6a;
+  --shadow:0 1px 2px rgba(10,25,22,.07), 0 6px 18px rgba(10,25,22,.08);
+  --lift:0 12px 30px rgba(10,25,22,.26);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root{
+  --ground:#0b1312; --surface:#151f1e; --sunken:#1c2725; --raise:#27332f;
+  --ink:#e9efec; --ink-2:#adbcb7; --ink-3:#93a29d;
+  --line:#5b6d64; --line-2:#748680;
+  --accent:#4cc0af; --accent-soft:#153431; --accent-ink:#8ee0d1; --on-accent:#06201d;
+  --warn:#e0a44a; --warn-soft:#2c2216;
+  --crit:#e08279; --crit-soft:#33201e;
+  --balaton:#cfa050; --grundlsee:#4fb3a6; --obertraun:#5aa0c4;
+  --budapest:#b083c9; --home:#93a29d;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 6px 18px rgba(0,0,0,.28);
+  --lift:0 12px 30px rgba(0,0,0,.55);
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --ground:#0b1312; --surface:#151f1e; --sunken:#1c2725; --raise:#27332f;
+  --ink:#e9efec; --ink-2:#adbcb7; --ink-3:#93a29d;
+  --line:#28352f; --line-2:#3a4a44;
+  --accent:#4cc0af; --accent-soft:#153431; --accent-ink:#8ee0d1; --on-accent:#06201d;
+  --warn:#e0a44a; --warn-soft:#2c2216;
+  --crit:#e08279; --crit-soft:#33201e;
+  --balaton:#cfa050; --grundlsee:#4fb3a6; --obertraun:#5aa0c4;
+  --budapest:#b083c9; --home:#93a29d;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 6px 18px rgba(0,0,0,.28);
+  --lift:0 12px 30px rgba(0,0,0,.55);
+  color-scheme:dark;
+}
+:root{
+  direction:rtl;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans Hebrew",Arial,sans-serif;
+  --ease:cubic-bezier(.22,.8,.3,1);
+}
+</style>
+</head>
+<body>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0}
+.app{
+  direction:rtl;background:var(--ground);color:var(--ink);
+  font-family:var(--sans);font-size:16px;line-height:1.5;
+  min-height:100dvh;-webkit-text-size-adjust:100%;
+}
+button,input,textarea,select{font:inherit;color:inherit;touch-action:manipulation}
+button{cursor:pointer}
+:focus-visible{outline:2.5px solid var(--accent);outline-offset:2px;border-radius:6px}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+/* extends a small control's hit area to the 44px touch minimum */
+.hit{position:relative}
+.hit::after{content:"";position:absolute;inset:50% 50%;width:44px;height:44px;transform:translate(50%,50%)}
+
+.wrap{max-width:940px;margin:0 auto;padding:0 14px}
+
+/* ---------- top bar ---------- */
+.topbar{position:sticky;top:0;z-index:40;background:var(--ground);border-bottom:1px solid var(--line)}
+.topbar .wrap{display:flex;flex-direction:column;gap:2px;padding-top:calc(8px + env(safe-area-inset-top))}
+.brandrow{display:flex;align-items:center;gap:8px;min-width:0}
+/* the title yields space before the controls do */
+.brand{
+  font-size:17px;font-weight:800;letter-spacing:-.025em;margin:0;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:0 1 auto;
+}
+.brand em{font-style:normal;color:var(--ink-3);font-weight:600}
+.countdown{
+  font-size:12.5px;font-weight:700;background:var(--accent-soft);color:var(--accent-ink);
+  padding:4px 10px;border-radius:99px;white-space:nowrap;flex:none;
+}
+.util{display:flex;gap:6px;margin-inline-start:auto;flex:none}
+.mini{
+  border:1px solid var(--line-2);background:var(--surface);color:var(--ink-2);
+  border-radius:99px;padding:0 11px;min-height:36px;font-size:13px;font-weight:650;
+  display:inline-flex;align-items:center;gap:5px;transition:background .15s var(--ease);
+}
+.mini:hover{border-color:var(--accent);color:var(--accent-ink)}
+.mini:active{transform:scale(.97)}
+.tabsrow{display:flex;align-items:center;gap:8px;min-width:0}
+.tabs{display:flex;gap:1px;overflow-x:auto;scrollbar-width:none;flex:1 1 auto;min-width:0}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  border:0;background:none;padding:8px 11px 10px;min-height:44px;
+  font-size:14.5px;font-weight:650;color:var(--ink-3);white-space:nowrap;
+  border-bottom:2.5px solid transparent;display:flex;align-items:center;gap:5px;
+  transition:color .15s var(--ease);
+}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.tab .n{font-size:11.5px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+
+/* ---------- leg split (we start alone, friends join on the 19th) ---------- */
+.legbar{display:flex;align-items:center;gap:8px;padding:4px 0 8px;flex-wrap:wrap}
+.legbar .flab{padding-inline-end:2px}
+.legbar .seg button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding-block:7px;padding-inline:12px;line-height:1.3}
+.legbar .seg button .lsub{font-size:10.5px;font-weight:600;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.legbar .seg button[aria-pressed="true"] .lsub{color:var(--ink-2)}
+.legdiv{display:flex;align-items:center;gap:11px;padding:8px 2px 2px}
+.legdiv .ln{flex:1;height:1px;background:var(--line-2)}
+.legdiv .lt{
+  font-size:12.5px;font-weight:750;color:var(--budapest);white-space:nowrap;
+  background:var(--surface);border:1px solid var(--line-2);padding:5px 13px;border-radius:99px;
+}
+.withpal{
+  font-size:11.5px;font-weight:700;color:var(--budapest);background:var(--sunken);
+  padding:2px 8px;border-radius:99px;white-space:nowrap;
+}
+
+/* ---------- board ---------- */
+.boardhint{
+  display:flex;gap:9px;align-items:flex-start;background:var(--surface);
+  border:1px solid var(--line);border-radius:12px;padding:11px 13px;
+  font-size:13.5px;color:var(--ink-2);margin:14px 0 4px;line-height:1.5;
+}
+.boardhint b{color:var(--ink);font-weight:700}
+.board{display:flex;flex-direction:column;gap:10px;padding:12px 0 40px}
+.bday{
+  background:var(--surface);border:1px solid var(--line);border-radius:13px;
+  border-inline-start:4px solid var(--rc);box-shadow:var(--shadow);overflow:hidden;
+}
+.bday.today{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent),var(--shadow)}
+.bday.past{opacity:.6}
+.bdh{display:flex;align-items:center;gap:10px;padding:10px 13px 8px;flex-wrap:wrap}
+.bdate{display:flex;align-items:baseline;gap:6px;flex:none}
+.bdate b{font-size:16px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.bdate span{font-size:12.5px;color:var(--ink-3)}
+.bregion{font-size:12.5px;font-weight:750;color:var(--rc)}
+.bstat{
+  margin-inline-start:auto;display:flex;gap:6px;align-items:center;flex-wrap:wrap;
+  font-size:12px;color:var(--ink-3);
+}
+.load{
+  font-variant-numeric:tabular-nums;font-weight:700;border-radius:99px;padding:2px 8px;
+  background:var(--sunken);color:var(--ink-2);white-space:nowrap;
+}
+.load.hot{background:var(--warn-soft);color:var(--warn)}
+.tag-today{
+  font-size:11px;font-weight:800;background:var(--accent);color:var(--on-accent);
+  padding:2px 8px;border-radius:99px;letter-spacing:.03em;
+}
+.lanes{display:flex;flex-direction:column;gap:1px;background:var(--line)}
+.lane{background:var(--surface);padding:8px 11px 10px;transition:background .15s var(--ease)}
+.lane.alt{background:var(--surface)}
+.lanelab{
+  font-size:10.5px;font-weight:800;letter-spacing:.1em;color:var(--ink-3);
+  display:flex;align-items:center;gap:6px;padding:0 2px 6px;
+}
+.lanelab .cnt{font-weight:700;letter-spacing:0}
+.lane.over{background:var(--accent-soft)}
+.slots{display:flex;flex-direction:column;gap:6px;min-height:46px}
+.dropempty{
+  border:1.5px dashed var(--line-2);border-radius:10px;min-height:46px;
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  font-size:12.5px;color:var(--ink-3);padding:8px;text-align:center;
+}
+.lane.over .dropempty{border-color:var(--accent);color:var(--accent-ink)}
+
+/* ---------- draggable chip ---------- */
+.chip2{
+  display:flex;align-items:center;gap:9px;background:var(--raise);
+  border:1px solid var(--line);border-radius:10px;padding:9px 10px;min-height:48px;
+  touch-action:none;-webkit-user-select:none;user-select:none;
+  transition:transform .15s var(--ease),box-shadow .15s var(--ease),opacity .15s var(--ease);
+}
+.chip2:active{transform:scale(.985)}
+.chip2.ghosted{opacity:.32}
+.chip2 .grip{
+  color:var(--ink-3);font-size:15px;line-height:1;letter-spacing:-2px;flex:none;
+  writing-mode:vertical-lr;text-orientation:upright;
+}
+.chip2 .cbody{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.chip2 .cn{font-size:14.5px;font-weight:650;letter-spacing:-.01em;overflow-wrap:anywhere}
+.chip2 .cs{font-size:11.5px;color:var(--ink-3);display:flex;gap:6px;flex-wrap:wrap}
+.chip2 .cs .mins{font-variant-numeric:tabular-nums;font-weight:700;color:var(--ink-2)}
+.chip2 .cx{
+  border:0;background:none;color:var(--ink-3);font-size:16px;line-height:1;
+  flex:none;padding:6px;border-radius:8px;
+}
+.chip2 .cx:hover{background:var(--crit-soft);color:var(--crit)}
+/* while dragging, the sticky header and the drawer must not eat the drop —
+   the pointer has to reach the lane underneath them */
+
+/* only "hidden" still moves the element, and it moves it fully away */
+@media (prefers-reduced-motion:reduce){
+  }
+@media(min-width:620px){.poolgroup .btime{
+  font-size:11.5px;font-weight:750;color:var(--on-accent);background:var(--bc,var(--accent));
+  padding:2px 9px;border-radius:5px;white-space:nowrap;
+}
+.poolgroup .btitle{font-size:12.5px;color:var(--ink-3)}
+.poolgroup .bcount{margin-inline-start:auto;font-size:11.5px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+
+/* ---------- filters ---------- */
+.seg{display:flex;gap:3px;background:var(--sunken);border-radius:10px;padding:3px;overflow-x:auto;scrollbar-width:none}
+.seg::-webkit-scrollbar{display:none}
+.seg button{
+  border:0;background:none;border-radius:7px;padding:0 11px;min-height:36px;
+  font-size:13px;font-weight:650;color:var(--ink-2);white-space:nowrap;
+  font-variant-numeric:tabular-nums;transition:background .15s var(--ease);
+}
+/* shape as well as color, so the choice reads without relying on hue */
+.seg button[aria-pressed="true"]{
+  background:var(--raise);color:var(--ink);
+  box-shadow:inset 0 -2px 0 var(--accent), 0 1px 3px rgba(0,0,0,.18);
+}
+.fline{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.fline.scroll{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.fline.scroll::-webkit-scrollbar{display:none}
+.flab{font-size:11px;font-weight:800;letter-spacing:.07em;color:var(--ink-3);flex:none}
+.chip{
+  border:1px solid var(--line-2);background:var(--surface);border-radius:99px;
+  padding:0 12px;min-height:36px;font-size:13px;color:var(--ink-2);white-space:nowrap;
+  display:inline-flex;align-items:center;transition:background .15s var(--ease);
+}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--ground);border-color:var(--ink)}
+.search{
+  width:100%;background:var(--surface);border:1px solid var(--line-2);
+  border-radius:10px;padding:0 12px;min-height:44px;font-size:16px;
+}
+
+/* ---------- library cards ---------- */
+.bucket{padding:22px 0 0}
+.bhead{display:flex;align-items:center;gap:9px;padding:0 2px 8px;border-bottom:1px solid var(--line);margin-bottom:10px}
+.btime{
+  font-size:12.5px;font-weight:750;color:var(--on-accent);background:var(--bc,var(--accent));
+  padding:3px 10px;border-radius:6px;white-space:nowrap;flex:none;
+}
+.btitle{font-size:14px;font-weight:700;letter-spacing:-.01em}
+.bcount{margin-inline-start:auto;font-size:12px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.cards{display:grid;gap:8px}
+@media(min-width:620px){.cards{grid-template-columns:1fr 1fr}}
+.card{
+  background:var(--surface);border:1px solid var(--line);border-radius:12px;
+  padding:11px 13px;display:flex;flex-direction:column;gap:6px;box-shadow:var(--shadow);
+  touch-action:none;-webkit-user-select:none;user-select:none;
+  transition:transform .15s var(--ease),box-shadow .15s var(--ease);
+}
+.card:active{transform:scale(.99)}
+.card.fav{border-color:var(--accent)}
+.ctop{display:flex;gap:8px;align-items:flex-start}
+.cname{font-weight:700;font-size:15px;flex:1;letter-spacing:-.01em;overflow-wrap:anywhere}
+.starbtn{border:0;background:none;font-size:17px;padding:3px;line-height:1;flex:none;filter:grayscale(1);opacity:.3;border-radius:8px}
+.starbtn[aria-pressed="true"]{filter:none;opacity:1}
+.cmeta{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--ink-3)}
+.pill{border-radius:99px;padding:2px 8px;font-size:11.5px;font-weight:700;white-space:nowrap}
+.pill.good{background:var(--accent-soft);color:var(--accent-ink)}
+.pill.partial{background:var(--warn-soft);color:var(--warn)}
+.pill.no{background:var(--crit-soft);color:var(--crit)}
+.pill.cat{background:var(--sunken);color:var(--ink-2);font-weight:650}
+.drive{font-variant-numeric:tabular-nums;font-weight:750;color:var(--ink-2);white-space:nowrap}
+.recs{color:var(--accent);font-size:10px;letter-spacing:1px}
+.cnote{font-size:13px;color:var(--ink-2);line-height:1.5}
+.cact{display:flex;gap:7px;margin-top:2px;flex-wrap:wrap}
+.tiny{
+  border:1px solid var(--line-2);background:var(--surface);border-radius:9px;
+  padding:0 13px;min-height:40px;font-size:13px;font-weight:650;color:var(--ink-2);
+  display:inline-flex;align-items:center;gap:5px;text-decoration:none;
+  transition:background .15s var(--ease);
+}
+.tiny:hover{border-color:var(--accent);color:var(--accent-ink);background:var(--accent-soft)}
+.tiny:active{transform:scale(.97)}
+.tiny.solid{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.tiny.solid:hover{background:var(--accent-ink);color:var(--surface)}
+.tiny.danger:hover{border-color:var(--crit);color:var(--crit);background:var(--crit-soft)}
+.empty{padding:36px 10px;text-align:center;color:var(--ink-3);font-size:14px;line-height:1.6}
+
+/* ---------- itinerary detail ---------- */
+.stack{display:flex;flex-direction:column;gap:9px;padding:14px 0 40px}
+.day{
+  background:var(--surface);border:1px solid var(--line);border-radius:12px;
+  border-inline-start:4px solid var(--rc);overflow:hidden;box-shadow:var(--shadow);
+}
+.day.today{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent),var(--shadow)}
+.day.past{opacity:.6}
+summary{list-style:none}
+summary::-webkit-details-marker{display:none}
+.dhead{display:flex;align-items:center;gap:11px;padding:11px 13px;min-height:56px}
+.dhead:hover{background:var(--sunken)}
+.dnum{font-size:11.5px;color:var(--ink-3);width:18px;text-align:center;flex:none;font-variant-numeric:tabular-nums}
+.ddate{flex:none;min-width:60px}
+.ddate b{display:block;font-size:15px;font-weight:750;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.ddate span{display:block;font-size:11.5px;color:var(--ink-3)}
+.dmain{flex:1;min-width:0}
+.dpick{font-weight:650;font-size:14.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dmeta{font-size:12px;color:var(--ink-3);display:flex;gap:8px;flex-wrap:wrap;margin-top:1px}
+.dmeta .rg{color:var(--rc);font-weight:750}
+.chev{flex:none;color:var(--ink-3);transition:transform .2s var(--ease)}
+.day[open] .chev{transform:rotate(180deg)}
+.dbody{padding:2px 13px 14px;display:flex;flex-direction:column;gap:13px;border-top:1px solid var(--line)}
+.sect{display:flex;flex-direction:column;gap:6px}
+.lab{font-size:10.5px;font-weight:800;letter-spacing:.1em;color:var(--ink-3)}
+.rows{display:flex;flex-direction:column;gap:1px;background:var(--line);border-radius:10px;overflow:hidden}
+.row{display:flex;gap:10px;background:var(--surface);padding:9px 11px;align-items:flex-start}
+.row .k{flex:none;width:76px;font-size:12.5px;color:var(--ink-3);padding-top:2px}
+.row .v{flex:1;min-width:0;font-size:14px}
+.ed{cursor:text;border-radius:6px;padding:2px 5px;margin:-2px -5px;border:1px dashed transparent;min-height:26px;white-space:pre-wrap;overflow-wrap:anywhere}
+.ed:hover{border-color:var(--line-2);background:var(--sunken)}
+.ed:empty::before{content:"— הוסף —";color:var(--ink-3);font-size:13px}
+.ed.dirty{box-shadow:inset 2px 0 0 var(--accent)}
+textarea.edit{width:100%;background:var(--sunken);border:1.5px solid var(--accent);border-radius:8px;padding:8px 10px;font-size:16px;resize:vertical;line-height:1.5}
+.warnbox{background:var(--warn-soft);border-radius:10px;padding:10px 12px;font-size:13.5px;color:var(--warn);font-weight:650;display:flex;gap:9px;line-height:1.5}
+.checks{display:flex;flex-direction:column;gap:1px}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:9px 3px;min-height:44px;font-size:14px;cursor:pointer}
+.chk input{margin:2px 0 0;accent-color:var(--accent);width:20px;height:20px;flex:none}
+.chk.on span{text-decoration:line-through;color:var(--ink-3)}
+.chk .x{margin-inline-start:auto;border:0;background:none;color:var(--ink-3);font-size:17px;line-height:1;padding:4px 8px;border-radius:8px}
+.chk .x:hover{background:var(--crit-soft);color:var(--crit)}
+.addrow{display:flex;gap:7px}
+.addrow input{flex:1;background:var(--sunken);border:1px solid var(--line);border-radius:9px;padding:0 11px;min-height:44px;font-size:16px}
+.dact{display:flex;gap:7px;flex-wrap:wrap}
+
+/* ---------- dialogs / toast ---------- */
+dialog{
+  border:1px solid var(--line-2);border-radius:16px;background:var(--surface);color:var(--ink);
+  padding:0;width:min(540px,94vw);max-height:84dvh;direction:rtl;font-family:var(--sans);
+  box-shadow:var(--lift);
+}
+dialog::backdrop{background:rgba(6,14,13,.6)}
+.dlg{display:flex;flex-direction:column;max-height:84dvh}
+.dlgh{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line)}
+.dlgh h2{margin:0;font-size:16px;font-weight:750;letter-spacing:-.01em}
+.dlgh .sub{font-size:12.5px;color:var(--ink-3);margin-top:1px}
+.dlgh button{margin-inline-start:auto;border:0;background:none;font-size:20px;color:var(--ink-3);line-height:1;padding:8px;border-radius:8px;min-height:44px;min-width:44px}
+.dlgh button:hover{background:var(--sunken);color:var(--ink)}
+.dlgb{padding:14px 16px 18px;overflow:auto;display:flex;flex-direction:column;gap:10px}
+.daypick{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.daypick button{
+  text-align:start;border:1px solid var(--line);background:var(--sunken);border-radius:10px;
+  padding:9px 11px;border-inline-start:3px solid var(--rc);min-height:56px;
+}
+.daypick button:hover{border-color:var(--accent);background:var(--accent-soft)}
+.daypick b{font-size:14px;font-weight:750;font-variant-numeric:tabular-nums}
+.daypick span{display:block;font-size:11.5px;color:var(--ink-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.syncta{width:100%;min-height:150px;font-family:ui-monospace,Menlo,monospace;font-size:12px;background:var(--sunken);border:1px solid var(--line);border-radius:10px;padding:10px}
+.note{font-size:13.5px;color:var(--ink-2);line-height:1.6;margin:0}
+.kv{display:flex;flex-direction:column}
+.kv div{display:flex;gap:10px;font-size:14px;padding:8px 0;border-bottom:1px solid var(--line)}
+.kv div:last-child{border:0}
+.kv b{flex:none;width:84px;color:var(--ink-3);font-weight:650;font-size:12.5px;padding-top:2px}
+.toast{
+  position:fixed;inset-block-end:calc(20px + env(safe-area-inset-bottom));inset-inline:0;
+  margin:auto;width:max-content;max-width:90vw;background:var(--ink);color:var(--ground);
+  padding:11px 18px;border-radius:99px;font-size:14px;font-weight:650;z-index:100;
+  opacity:0;transform:translateY(10px);transition:opacity .2s var(--ease),transform .2s var(--ease);
+  display:flex;align-items:center;gap:12px;
+}
+.toast.on{opacity:1;transform:none}
+.toast button{border:0;background:none;color:var(--accent-ink);font-weight:750;font-size:14px;padding:4px 2px;text-decoration:underline}
+.toast:not(.on){pointer-events:none}
+
+/* ================= additions (kept last so they win) ================= */
+/* ===== phone ===== */
+/* iOS: keep the chrome clear of the notch and the home indicator. */
+html{-webkit-text-size-adjust:100%}
+body{overscroll-behavior-y:none}
+header{padding-top:env(safe-area-inset-top)}
+main{
+  padding-inline:max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right));
+  padding-bottom:calc(28px + env(safe-area-inset-bottom));
+}
+.drawer{padding-bottom:env(safe-area-inset-bottom)}
+/* Cards are drag handles; without this iOS long-press pops the callout menu. */
+.card,.chip2{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+/* Let the lists scroll vertically — the JS decides when a drag wins. */
+.cards{touch-action:pan-y}
+/* 44px minimum for anything tappable, per Apple's own guidance. */
+.starbtn,.tab,.mini,.chip,.seg>button{min-height:44px;-webkit-tap-highlight-color:transparent}
+@media(max-width:620px){
+  .card{padding:13px 14px}
+  .cname{font-size:15.5px;line-height:1.35}
+  .tabsrow{gap:6px}
+  .tab{padding-inline:11px}
+}
+/* ===== attraction sheet ===== */
+/* Bottom sheet on phones, centred dialog on desktop. */
+#dlg-att::backdrop{background:rgba(8,18,16,.5);backdrop-filter:blur(2px)}
+#dlg-att{
+  border:0;padding:0;background:transparent;
+  max-width:560px;width:100%;
+  margin-inline:auto;margin-block:auto;
+}
+.attsheet{
+  background:var(--surface);color:var(--ink);
+  border:1px solid var(--line);border-radius:20px;
+  box-shadow:var(--lift);overflow:hidden;
+}
+.atthead{padding:18px 18px 12px;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:flex-start}
+.atthead h2{margin:0;font-size:19px;line-height:1.3;flex:1}
+.attclose{
+  flex:none;width:40px;height:40px;border-radius:12px;border:1px solid var(--line);
+  background:var(--raise);color:var(--ink-2);font-size:17px;cursor:pointer;
+}
+.attbody{padding:16px 18px;display:flex;flex-direction:column;gap:14px}
+.attrow{display:flex;flex-wrap:wrap;gap:7px}
+.attnote{font-size:14.5px;line-height:1.6;color:var(--ink-2)}
+.attkv{display:grid;grid-template-columns:auto 1fr;gap:7px 12px;font-size:14px}
+.attkv b{color:var(--ink-3);font-weight:600}
+.attact{
+  display:flex;gap:9px;padding:14px 18px calc(16px + env(safe-area-inset-bottom));
+  border-top:1px solid var(--line);background:var(--sunken);
+}
+.attact button{
+  flex:1;min-height:48px;border-radius:13px;border:1px solid var(--line);
+  background:var(--raise);color:var(--ink);font:inherit;font-size:15px;cursor:pointer;
+}
+.attact button.primary{background:var(--accent);color:var(--on-accent);border-color:transparent;font-weight:600}
+@media(max-width:620px){
+  #dlg-att{margin:0;position:fixed;inset:auto 0 0 0;max-width:none;width:100%}
+  .attsheet{border-radius:20px 20px 0 0;border-bottom:0}
+  /* thumb-reachable grab bar */
+  .atthead::before{
+    content:"";position:absolute;inset-block-start:7px;inset-inline:0;margin:auto;
+    width:38px;height:4px;border-radius:2px;background:var(--line-2);
+  }
+  .atthead{position:relative;padding-top:22px}
+}
+
+/* "where to eat" strip closing an area */
+.eathead{
+  display:flex;align-items:center;gap:8px;
+  margin:14px 0 8px;padding-block-start:11px;
+  border-block-start:1px dashed var(--line-2);
+  font-size:13.5px;font-weight:650;color:var(--ink-2);
+}
+/* official-site chip on a card */
+.sitelink{
+  flex:none;display:inline-flex;align-items:center;justify-content:center;
+  min-width:44px;min-height:44px;border-radius:11px;
+  border:1px solid var(--line);background:var(--raise);
+  font-size:15px;text-decoration:none;
+}
+.sitelink:hover{border-color:var(--accent);background:var(--accent-soft)}
+
+/* area chips: place on top, drive time under it, count as a badge */
+.areaseg{flex-wrap:nowrap}
+.areaseg button{
+  display:flex;flex-direction:column;align-items:flex-start;justify-content:center;
+  gap:2px;padding:8px 12px;line-height:1.3;white-space:nowrap;
+}
+.areaseg button .lsub{
+  font-size:10.5px;font-weight:600;color:var(--ink-3);font-variant-numeric:tabular-nums;
+}
+.areaseg button[aria-pressed="true"] .lsub{color:var(--ink-2)}
+.areaseg button .arow{display:flex;align-items:center;gap:6px}
+.areaseg button .aname{font-size:13.5px;font-weight:650}
+.areaseg button .acount{
+  flex:none;min-width:20px;padding:1px 6px;border-radius:999px;
+  background:var(--sunken);border:1px solid var(--line);
+  font-size:11px;font-weight:700;color:var(--ink-2);line-height:1.5;
+}
+.areaseg button[aria-pressed="true"] .acount{
+  background:var(--accent);border-color:transparent;color:var(--on-accent);
+}
+.fline.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.fline.scroll::-webkit-scrollbar{display:none}
+
+/* highlighted categories — a coloured rail so they read while scrolling */
+.card.hl{position:relative;overflow:hidden}
+.card.hl::before{
+  content:"";position:absolute;inset-block:0;inset-inline-start:0;width:4px;
+  background:var(--hlc);
+}
+.chip2.hl{border-inline-start:4px solid var(--hlc)}
+.hl-bike{--hlc:#2f8fbe}
+.hl-coaster{--hlc:#c9702c}
+.pill.hlpill{
+  background:color-mix(in srgb, var(--hlc) 16%, transparent);
+  border-color:color-mix(in srgb, var(--hlc) 45%, transparent);
+  color:var(--hlc);font-weight:650;
+}
+@supports not (color: color-mix(in srgb, red 50%, blue)){
+  .pill.hlpill{background:var(--accent-soft);color:var(--accent-ink);border-color:var(--accent)}
+}
+
+/* ===== accessibility ===== */
+/* Was a single :focus rule for the whole app — keyboard users had no idea
+   where they were. One visible ring, everywhere, that survives dark mode. */
+:where(button,a,input,select,textarea,[tabindex]):focus-visible{
+  outline:3px solid var(--accent);
+  outline-offset:2px;
+  border-radius:8px;
+}
+:where(button,a,summary,label,[role="button"]){cursor:pointer}
+:where(button,a){transition:background-color .18s ease,border-color .18s ease,color .18s ease}
+@media (prefers-reduced-motion:reduce){
+  :where(button,a){transition:none}
+}
+/* borders now carry real weight, so soften where they'd shout */
+.card,.chip2{border-color:color-mix(in srgb, var(--line) 62%, transparent)}
+.card:hover{border-color:var(--line-2)}
+@supports not (color: color-mix(in srgb, red 50%, blue)){
+  .card,.chip2{border-color:var(--line)}
+}
+/* numbers stay aligned when they sit in a column */
+.mins,.drive,.n,.bcount,.acount{font-variant-numeric:tabular-nums}
+
+/* the one button that opens the whole catalogue — give it presence */
+.mini.primary{
+  background:var(--accent);color:var(--on-accent);
+  border-color:transparent;font-weight:650;
+}
+.mini.primary:hover{filter:brightness(1.08)}
+.mini{min-height:40px;padding-inline:12px}
+@media(max-width:620px){
+  .brandrow{flex-wrap:wrap;gap:8px}
+  .mini.primary{order:-1}
+}
+
+/* ===== attractions bank (modal) ===== */
+#dlg-bank::backdrop{background:rgba(8,18,16,.55);backdrop-filter:blur(3px)}
+#dlg-bank{
+  border:0;padding:0;background:transparent;
+  width:min(720px,96vw);max-height:92dvh;margin:auto;
+}
+.bankwrap{
+  display:flex;flex-direction:column;max-height:92dvh;
+  background:var(--surface);color:var(--ink);
+  border:1px solid var(--line);border-radius:20px;
+  box-shadow:var(--lift);overflow:hidden;direction:rtl;
+}
+.bankhead{
+  flex:none;display:flex;gap:12px;align-items:flex-start;
+  padding:16px 18px 12px;border-bottom:1px solid var(--line);background:var(--surface);
+}
+.bankhead h2{margin:0;font-size:19px}
+.bankhead .sub{font-size:12.5px;color:var(--ink-3);margin-top:2px}
+.bankfilters{
+  flex:none;display:flex;flex-direction:column;gap:8px;
+  padding:12px 18px;border-bottom:1px solid var(--line);background:var(--sunken);
+}
+.bankbody{
+  flex:1 1 auto;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  padding:14px 18px calc(20px + env(safe-area-inset-bottom));
+  overscroll-behavior:contain;
+}
+/* inside the modal a card is for reading, not dragging */
+.bankbody .card{cursor:pointer}
+@media(max-width:620px){
+  #dlg-bank{width:100vw;max-height:100dvh;margin:0}
+  .bankwrap{border-radius:0;border:0;max-height:100dvh;height:100dvh}
+  .bankhead{padding-top:calc(14px + env(safe-area-inset-top))}
+}
+
+/* the hint rides along with the title but shouldn't compete with it */
+
+/* iPad and other tablets: give the drawer a slightly taller peek so the
+   title and the chevron are both readable without opening it. */
+/* short viewports (landscape): leave room for the handle itself */
+
+/* ===== app shell =====
+   The document must not grow past the visible area: when it does, an
+   auto-height iframe (the artifact preview) makes `position:fixed` resolve
+   against the whole document and anything pinned to the bottom disappears
+   below the fold. So the shell takes the height and `main` does the scrolling. */
+html{height:100%}
+body{height:100%;overflow:hidden}
+.app{
+  position:relative;                 /* anchor for the pinned children */
+  height:100%;
+  min-height:0;                      /* override the old min-height:100dvh */
+  display:flex;flex-direction:column;
+  overflow:hidden;
+}
+.topbar{flex:none}
+main{
+  flex:1 1 auto;min-height:0;
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;
+}
+/* pinned to the shell, not to the document */
+
+/* type chips: label and count side by side, same badge as the area row */
+.fline.scroll .seg button{display:flex;align-items:center}
+.fline.scroll .seg button .acount{
+  margin-inline-start:7px;flex:none;min-width:20px;padding:1px 6px;border-radius:999px;
+  background:var(--sunken);border:1px solid var(--line);
+  font-size:11px;font-weight:700;color:var(--ink-2);line-height:1.5;
+}
+.fline.scroll .seg button[aria-pressed="true"] .acount{
+  background:var(--accent);border-color:transparent;color:var(--on-accent);
+}
+</style>
+
+<div class="app" dir="rtl">
+  <a class="vh" href="#main">דלג לתוכן</a>
+  <header class="topbar">
+    <div class="wrap">
+      <div class="brandrow">
+        <h1 class="brand">אוסטריה <em>·</em> הונגריה</h1>
+        <div class="util">
+          <button class="mini primary" id="btn-bank">🗺 בנק אטרקציות</button>
+          <button class="mini" id="btn-info">לא לשכוח</button>
+          <button class="mini" id="btn-sync">שמירה</button>
+        </div>
+      </div>
+      <div class="tabsrow">
+      <nav class="tabs" role="tablist" aria-label="תצוגות">
+        <button class="tab" role="tab" data-view="board" aria-selected="true">מסלול דינאמי</button>
+        <button class="tab" role="tab" data-view="days" aria-selected="false">סדר יום<span class="n">12</span></button>
+        <button class="tab" role="tab" data-view="austria" aria-selected="false">אוסטריה<span class="n" id="n-aut"></span></button>
+        <button class="tab" role="tab" data-view="budapest" aria-selected="false">בודפשט<span class="n" id="n-bud"></span></button>
+      </nav>
+      <span class="countdown" id="countdown"></span>
+      </div>
+      <div class="legbar" id="legbar"></div>
+    </div>
+  </header>
+
+  <main class="wrap" id="main">
+    <section id="view-board"></section>
+    <section id="view-days" hidden></section>
+    <section id="view-austria" hidden></section>
+    <section id="view-budapest" hidden></section>
+  </main>
+
+  <dialog id="dlg-bank"><div class="bankwrap">
+    <div class="bankhead">
+      <div>
+        <h2>🗺 בנק אטרקציות</h2>
+        <div class="sub" id="bank-sub"></div>
+      </div>
+      <button class="attclose" data-close aria-label="סגור">✕</button>
+    </div>
+    <div class="bankfilters" id="bank-filters"></div>
+    <div class="bankbody" id="bank-body"></div>
+  </div></dialog>
+
+  <dialog id="dlg-att"><div class="attsheet">
+    <div class="atthead">
+      <h2 id="att-name"></h2>
+      <button class="attclose" data-close aria-label="סגור">✕</button>
+    </div>
+    <div class="attbody" id="att-body"></div>
+    <div class="attact" id="att-act"></div>
+  </div></dialog>
+
+  <dialog id="dlg-move"><div class="dlg">
+    <div class="dlgh"><div><h2 id="move-title">העברה ליום</h2><div class="sub" id="move-sub"></div></div><button data-close aria-label="סגור">✕</button></div>
+    <div class="dlgb">
+      <div class="fline" id="move-lane"></div>
+      <div class="daypick" id="move-days"></div>
+    </div>
+  </div></dialog>
+
+  <dialog id="dlg-info"><div class="dlg">
+    <div class="dlgh"><div><h2>לא לשכוח</h2><div class="sub">רגישויות, ציוד, ותרגום לשעת חירום</div></div><button data-close aria-label="סגור">✕</button></div>
+    <div class="dlgb" id="info-body"></div>
+  </div></dialog>
+
+  <dialog id="dlg-sync"><div class="dlg">
+    <div class="dlgh"><div><h2>איפה נשמרים השינויים</h2><div class="sub">כל שינוי נשמר על המכשיר הזה בלבד</div></div><button data-close aria-label="סגור">✕</button></div>
+    <div class="dlgb">
+      <p class="note">לחברים שמצטרפים ב-19.08 אפשר לשלוח קישור שנפתח ישר על הקטע המשותף.</p>
+      <div class="cact"><button class="tiny" id="sync-friendlink">העתק קישור לקטע של החברים</button></div>
+      <p class="note">כל שינוי נשמר בדפדפן שלך בלבד. כדי להעביר את הלוח שלך למישהו אחר — העתק את הקוד ושלח בוואטסאפ. הוא מדביק אותו כאן ולוחץ «טען».</p>
+      <label class="lab" for="sync-ta">קוד הלוח</label>
+      <textarea class="syncta" id="sync-ta" spellcheck="false"></textarea>
+      <div class="cact">
+        <button class="tiny solid" id="sync-copy">העתק קוד</button>
+        <button class="tiny" id="sync-load">טען מהקוד</button>
+        <button class="tiny" id="sync-file">שמור גיבוי</button>
+      </div>
+      <div class="cact"><button class="tiny danger" id="sync-reset">אפס הכל לגיליון המקורי</button></div>
+    </div>
+  </div></dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</div>
+
+<script>
+const DATA = {"days":[{"date":"14.08","dow":"שישי","lodging":"Mövenpick Balaland","pension":"✅ הכל כלול — בוקר + צהריים + ערב","base":"בלטון (הונגריה)","breakfast":"—","lunch":"בטיסה · שנת״צ בטיסה","dinner":"✅ במלון (הכל כלול)","must":"","shop":"אין צורך (הכל כלול)","logi":"צ'ק-אין 15:00 · שנת״צ בטיסה/רכב","flight":"TLV: המראה 14:15 / נחיתה 16:45","pick":"הגעה והסתגלות — בריכות הריזורט","alt":"","rain":"מתקני הריזורט (מקורה)","afternoon":"מנוחה","extra":"","lodgingCarried":false,"baseCarried":false,"region":"balaton","iso":"2026-08-14"},{"date":"15.08","dow":"שבת","lodging":"Mövenpick Balaland","pension":"✅ הכל כלול — בוקר + צהריים + ערב","base":"בלטון (הונגריה)","breakfast":"✅ במלון","lunch":"✅ במלון · שנת״צ בחדר","dinner":"✅ במלון","must":"","shop":"⚠️ לקנות אוכל לדרך של מחר (חטיפים + צהריים) — אוסטריה סגורה בראשון","logi":"","flight":"","pick":"יום חוף / בריכות בריזורט (הכל כלול)","alt":"Balatonland — פארק משפחות","rain":"בריכה מקורה בריזורט","afternoon":"שייט קל באגם","extra":"","lodgingCarried":false,"baseCarried":false,"region":"balaton","iso":"2026-08-15"},{"date":"16.08","dow":"ראשון","lodging":"Dormio Resort","pension":"✅ בוקר כלול · ערב במסעדה (לאשר חצי-פנסיון)","base":"גרונדלזה (זלצקמרגוט)","breakfast":"✅ במלון בלטון (לפני צ'ק-אאוט)","lunch":"🛒 פיקניק בדרך (נקנה אתמול) · שנת״צ ברכב 13:30","dinner":"🍽️ מסעדה — הזמנה 18:00 (מטבחים נסגרים 20:00)","must":"עצירה לאטרקציה בדרך","shop":"","logi":"יציאה 09:00 · צ'ק-אין 15:00","flight":"","pick":"Hallstatt — טיילת האגם (קרוב, שטוח)","alt":"Gosausee","rain":"קפה בהלשטט","afternoon":"עצירה קצרה בדרך","extra":"","lodgingCarried":false,"baseCarried":false,"region":"grundlsee","iso":"2026-08-16"},{"date":"17.08","dow":"שני","lodging":"Dormio Resort","pension":"✅ בוקר כלול · ערב במסעדה (לאשר חצי-פנסיון)","base":"גרונדלזה (זלצקמרגוט)","breakfast":"✅ במלון","lunch":"בדרך / פיקניק · חזרה לשנת״צ 13:00","dinner":"🍽️ מסעדה — הזמנה 18:00-18:30","must":"","shop":"🛒 סופר נפתח 07:30 — לקנות ארוחות בוקר לאוברטראון (Dormio ללא בוקר!)","logi":"יציאה 09:30","flight":"","pick":"Gosausee — מסלול שטוח סביב האגם","alt":"Rucki Zucki (פארק, פתוח 07:30)","rain":"Haus der Natur (זלצבורג)","afternoon":"Rucki Zucki בדרך חזרה","extra":"","lodgingCarried":true,"baseCarried":false,"region":"grundlsee","iso":"2026-08-17"},{"date":"18.08","dow":"שלישי","lodging":"Dormio Resort","pension":"🛒 דירת נופש — אין ארוחות · בישול/קניות עצמי","base":"אוברטראון / הלשטט","breakfast":"✅ במלון גרונדלזה (לפני צ'ק-אאוט)","lunch":"בדרך / בהגעה","dinner":"🍽️ מסעדה — הזמנה 18:30","must":"","shop":"🛒 לצייד את הדירה · סופר שעות מפוצלות · מיני-מרקט בריזורט כל היום","logi":"צ'ק-אין 15:00/16:00 · יציאה גמישה","flight":"","pick":"Wild-Freizeitpark Untertauern — גן חיות בדרך","alt":"Gollinger Wasserfall","rain":"Salzwelten (מכרה מלח)","afternoon":"פארק שעשועים ליד הריזורט","extra":"","lodgingCarried":true,"baseCarried":false,"region":"obertraun","iso":"2026-08-18"},{"date":"19.08","dow":"רביעי","lodging":"Dormio Resort","pension":"","base":"אוברטראון / הלשטט","breakfast":"🛒 בדירה — לחם טרי מהמיני-מרקט (הזמנה מראש 07:30)","lunch":"בחוץ · שנת״צ בעגלה/מנשא","dinner":"🍽️ מסעדה — הזמנה 18:00-18:30","must":"יציאה 08:30-09:00","shop":"להזמין לחם למחר במיני-מרקט","logi":"","flight":"","pick":"Fürbach Alpaka — חוות אלפקות, שטוח ובטוח","alt":"Reiteralm (טרמפולינות)","rain":"Therme Amadé (מרחצאות)","afternoon":"גלידה בהלשטט","extra":"","lodgingCarried":true,"baseCarried":true,"region":"obertraun","iso":"2026-08-19"},{"date":"20.08","dow":"חמישי","lodging":"Dormio Resort","pension":"","base":"אוברטראון / הלשטט","breakfast":"🛒 בדירה (מהקניות)","lunch":"בחוץ","dinner":"🍽️ מסעדה — הזמנה 18:00-18:30","must":"יציאה עד 09:30","shop":"לבדוק מלאי בוקר למחר","logi":"","flight":"","pick":"Gollinger Wasserfall — הליכה קצרה","alt":"Reiteralm","rain":"Salzwelten Hallein","afternoon":"פיקניק ליד המפל","extra":"הר החושים","lodgingCarried":true,"baseCarried":true,"region":"obertraun","iso":"2026-08-20"},{"date":"21.08","dow":"שישי","lodging":"Dormio Resort","pension":"","base":"אוברטראון / הלשטט","breakfast":"🛒 בדירה (מהקניות)","lunch":"בחוץ","dinner":"בדירה / מסעדה","must":"","shop":"⚠️ יום קניות גדול! לסופ״ש + לנסיעה לבודפשט (שבת סופר עד 12:15, ראשון סגור)","logi":"","flight":"","pick":"יום רגוע + בריכה בריזורט","alt":"Zell am See (Strandbad)","rain":"Alpentherme (מרחצאות)","afternoon":"קניות ליום הנסיעה","extra":"","lodgingCarried":true,"baseCarried":true,"region":"obertraun","iso":"2026-08-21"},{"date":"22.08","dow":"שבת","lodging":"Dormio Resort","pension":"🛒 דירת נופש — אין ארוחות · בישול/קניות עצמי","base":"אוברטראון / הלשטט","breakfast":"🛒 בדירה (מהקניות)","lunch":"בחוץ / בדירה","dinner":"🍽️ מסעדה — הזמנה 18:00-18:30","must":"","shop":"⚠️ סופר רק עד 12:15! לקנות ארוחת בוקר של מחר + אוכל לדרך לבודפשט","logi":"","flight":"","pick":"Reiteralm — מסלול משפחתי + טרמפולינות","alt":"Rucki Zucki","rain":"Therme Amadé","afternoon":"גן שעשועים בהר","extra":"הר החושים","lodgingCarried":true,"baseCarried":false,"region":"obertraun","iso":"2026-08-22"},{"date":"23.08","dow":"ראשון","lodging":"Stories Boutique","pension":"✅ בוקר כלול? (לאשר) · ערב במסעדה","base":"בודפשט","breakfast":"🛒 בדירה (מקניות שבת) / מיני-מרקט","lunch":"🛒 פיקניק בדרך (נקנה בשבת) · שנת״צ עמוקה ברכב 13:00","dinner":"🍽️ מסעדה — הזמנה 18:30 (עייפות)","must":"עצירה ארוכה בדרך","shop":"","logi":"יציאה 08:30 · צ'ק-אין 14:00/15:00","flight":"","pick":"נסיעה — עצירה ארוכה בדרך","alt":"","rain":"עצירה בקניון בדרך","afternoon":"מנוחה בבודפשט","extra":"","lodgingCarried":false,"baseCarried":false,"region":"budapest","iso":"2026-08-23"},{"date":"24.08","dow":"שני","lodging":"Stories Boutique","pension":"✅ בוקר כלול? (לאשר) · ערב במסעדה","base":"בודפשט","breakfast":"✅ במלון (לאשר) / קפה / סופר נפתח מוקדם","lunch":"בחוץ · שנת״צ בעגלה תוך תנועה","dinner":"🍽️ מסעדה — הזמנה 18:30-19:00","must":"יקיצה טבעית","shop":"סופרמרקטים נפתחים מוקדם","logi":"","flight":"","pick":"פארק העיר + טיילת הדנובה","alt":"גבעת הטירה / רכבל","rain":"מרחצאות מקורים לילדים","afternoon":"גלידה / קניות","extra":"","lodgingCarried":false,"baseCarried":false,"region":"budapest","iso":"2026-08-24"},{"date":"25.08","dow":"שלישי","lodging":"— טיסה חזרה —","pension":"—","base":"בית","breakfast":"מלון / קפה","lunch":"בשדה / בטיסה","dinner":"—","must":"","shop":"דיוטי-פרי (רגע אחרון)","logi":"יציאה לשדה 11:00","flight":"TLV: המראה 14:45 / נחיתה 18:55","pick":"— יום טיסה —","alt":"","rain":"","afternoon":"דיוטי-פרי","extra":"","lodgingCarried":false,"baseCarried":false,"region":"home","iso":"2026-08-25"}],"austria":[{"cat":"קרחונים ורכבלים","name":"Berg der Sinne (Asitzbahn, לאוגנג)","region":"ינצגאו/לאוגנג","dist":"~ 1.40 שעות","mins":100,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"הר חושים: רכבל 15-20 דק', שביל יחפה+מים קרים+בעלי חיים רועים+נוף. המלצה חמה מחברה. יום שלם עם נסיעה (כ-3:20 ש' הלוך-חזור).","url":"https://www.saalfelden-leogang.com/en/region-experience/mountain-experiences/berg-der-sinne"},{"cat":"אגמים ועיירות","name":"Hallstatt","region":"זלצקמרגוט","dist":"10 דק'","mins":10,"fitText":"🟢 מצוין","fit":"good","sources":4,"note":"עיירה + טיילת אגם שטוחה. חובה.","url":"https://www.hallstatt.net/"},{"cat":"אגמים ועיירות","name":"Gosausee","region":"זלצקמרגוט","dist":"30-40 דק'","mins":40,"fitText":"🟢 מצוין","fit":"good","sources":3,"note":"מסלול שטוח סביב האגם + תצפית.","url":"https://dachstein.salzkammergut.at/en/gosau-am-dachstein/lake-gosau.html"},{"cat":"אגמים ועיירות","name":"Gmunden","region":"זלצקמרגוט","dist":"50 דק'","mins":50,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"עיירה על אגם Traunsee.","url":"https://traunsee-almtal.salzkammergut.at/en/gmunden.html"},{"cat":"אגמים ועיירות","name":"St. Gilgen","region":"Wolfgangsee","dist":"45-60 דק'","mins":60,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"עיירה ציורית על האגם."},{"cat":"אגמים ועיירות","name":"St. Wolfgang","region":"Wolfgangsee","dist":"50-60 דק'","mins":60,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"עיירה + רכבל Schafberg."},{"cat":"אגמים ועיירות","name":"Jägersee","region":"Kleinarl (פונגאו)","dist":"~1.5 ש'","mins":90,"fitText":"🟢 מצוין","fit":"good","sources":3,"note":"אגם רגוע, סירות, פיקניק."},{"cat":"אגמים ועיירות","name":"Zell am See / Strandbad","region":"פינצגאו","dist":"~1.5-2 ש'","mins":120,"fitText":"🟡 חלקי","fit":"partial","sources":2,"note":"חוף אגם; Paragliding למבוגרים בלבד."},{"cat":"אגמים ועיירות","name":"Blausee","region":"פינצגאו","dist":"~1.5-2 ש'","mins":120,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"אזור טיולים/אגם."},{"cat":"אגמים ועיירות","name":"Winklersee","region":"טירול","dist":"~2.5 ש'","mins":150,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"אגם קטן לשחייה."},{"cat":"אגמים ועיירות","name":"Grießenkar","region":"פונגאו","dist":"~1.5 ש'","mins":90,"fitText":"🟡 חלקי","fit":"partial","sources":1,"note":"אזור הררי/סקי בקיץ."},{"cat":"אגמים ועיירות","name":"Sankt Martin am Tennengebirge","region":"טננגאו","dist":"~1 ש'","mins":60,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"כפר אלפיני."},{"cat":"אגמים ועיירות","name":"Saalfelden Leogang","region":"פינצגאו","dist":"~1.5 ש'","mins":90,"fitText":"🟡 חלקי","fit":"partial","sources":1,"note":"אזור נופש הררי."},{"cat":"אגמים ועיירות","name":"Abtenau","region":"טננגאו","dist":"~1 ש'","mins":60,"fitText":"🟡 רק 4.5","fit":"partial","sources":1,"note":"כולל מגלשת הרים."},{"cat":"מפלים ונקיקים","name":"Gollinger Wasserfall","region":"טננגאו","dist":"~1 ש'","mins":60,"fitText":"🟢 מצוין","fit":"good","sources":3,"note":"מפל, הליכה קצרה וקלה.","url":"https://www.golling.info/erlebnis-natur/gollinger-wasserfall"},{"cat":"מפלים ונקיקים","name":"Traunfall","region":"זלצקמרגוט","dist":"~1 ש'","mins":60,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"מפל, פתוח 24 ש'."},{"cat":"מפלים ונקיקים","name":"Liechtensteinklamm","region":"פונגאו","dist":"~1.5 ש'","mins":90,"fitText":"🟡 בזהירות","fit":"partial","sources":1,"note":"נקיק צר עם מדרגות. מנשא."},{"cat":"מפלים ונקיקים","name":"Sigmund-Thun Klamm","region":"Kaprun","dist":"~1.5-2 ש'","mins":120,"fitText":"🟡 בזהירות","fit":"partial","sources":2,"note":"נקיק, 320 מדרגות. מנשא."},{"cat":"מפלים ונקיקים","name":"Stuibenfall","region":"עמק אוץ (טירול)","dist":"~3 ש'","mins":180,"fitText":"🟡 בזהירות","fit":"partial","sources":1,"note":"מפל גדול עם מדרגות. רחוק מדי."},{"cat":"מרחצאות ופארקי מים","name":"Therme Amadé","region":"Altenmarkt","dist":"~1.5 ש'","mins":90,"fitText":"🟢 מצוין","fit":"good","sources":3,"note":"אזור פעוטות. קלף גשם מעולה.","url":"https://www.thermeamade.at/"},{"cat":"מרחצאות ופארקי מים","name":"Alpentherme Gastein","region":"גשטיין","dist":"~1.5-2 ש'","mins":120,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"מרחצאות עם ספא."},{"cat":"מרחצאות ופארקי מים","name":"Aqua Dome","region":"עמק אוץ (טירול)","dist":"~3 ש'","mins":180,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"ספא מודרני. רחוק מדי."},{"cat":"מרחצאות ופארקי מים","name":"Wasserwelt Wagrain","region":"Wagrain","dist":"~1.5 ש'","mins":90,"fitText":"🟡 רק 4.5","fit":"partial","sources":1,"note":"פארק מים לילדים."},{"cat":"רכבלים והרים","name":"Dachstein-Krippenstein","region":"אוברטראון (בבסיס!)","dist":"רכבל מהבסיס","mins":5,"fitText":"🟡 רק 4.5","fit":"partial","sources":2,"note":"מערת קרח, גשר תלוי, 5fingers. גובה — לא לתינוקת.","url":"https://dachstein-salzkammergut.com/"},{"cat":"רכבלים והרים","name":"Kitzsteinhorn","region":"Kaprun","dist":"~1.5-2 ש'","mins":120,"fitText":"🔴 לא מומלץ","fit":"no","sources":2,"note":"קרחון, גובה רב, קור."},{"cat":"רכבלים והרים","name":"Grossglockner Hochalpenstraße","region":"פינצגאו","dist":"~2-2.5 ש'","mins":150,"fitText":"🟡 חלקי","fit":"partial","sources":1,"note":"דרך אלפינית + גן חיות בדרך."},{"cat":"רכבלים והרים","name":"Kaprun","region":"פינצגאו","dist":"~1.5-2 ש'","mins":120,"fitText":"🟡 חלקי","fit":"partial","sources":2,"note":"בסיס לסכר/רכבלים."},{"cat":"רכבלים והרים","name":"Panoramabahn Großarltal","region":"פונגאו","dist":"~1.5 ש'","mins":90,"fitText":"🟡 חלקי","fit":"partial","sources":1,"note":"רכבל נופי."},{"cat":"רכבלים והרים","name":"Snow Space Salzburg (Flachau)","region":"Flachau","dist":"~1.5 ש'","mins":90,"fitText":"🟡 חלקי","fit":"partial","sources":1,"note":"רכבלים/סקי בקיץ."},{"cat":"רכבלים והרים","name":"Hopsiland (Planai)","region":"שאלדמינג","dist":"~1 ש'","mins":60,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"פארק משחקים על ההר + רכבל."},{"cat":"רכבלים והרים","name":"Reiteralm","region":"שאלדמינג","dist":"~1 ש'","mins":60,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"מסלול לאגם, טרמפולינות."},{"cat":"מגלשות קיץ (Coaster)","name":"Lucky Flitzer","region":"Flachau","dist":"~1.5 ש'","mins":90,"fitText":"🟡 רק 4.5","fit":"partial","sources":3,"note":"מגלשת הרים מהירה."},{"cat":"מגלשות קיץ (Coaster)","name":"Keltenblitz","region":"Bad Dürrnberg (Hallein)","dist":"~1 ש'","mins":60,"fitText":"🟡 רק 4.5","fit":"partial","sources":2,"note":"מגלשה במכרה מלח."},{"cat":"מגלשות קיץ (Coaster)","name":"Maisi Flitzer","region":"Kaprun","dist":"~1.5-2 ש'","mins":120,"fitText":"🟡 רק 4.5","fit":"partial","sources":1,"note":"מגלשת הרים."},{"cat":"מגלשות קיץ (Coaster)","name":"Sommerrodelbahn Biberg","region":"Saalfelden","dist":"~1.5 ש'","mins":90,"fitText":"🟡 רק 4.5","fit":"partial","sources":1,"note":"מגלשת הרים."},{"cat":"מגלשות קיץ (Coaster)","name":"Flying Coaster Gröbming","region":"גרובמינג","dist":"~40 דק'","mins":40,"fitText":"🔴 מגיל 8","fit":"no","sources":1,"note":"מסלול מעופף — מגיל 8."},{"cat":"מגלשות קיץ (Coaster)","name":"Zipline Stoderzinken","region":"גרובמינג","dist":"~40 דק'","mins":40,"fitText":"🔴 מגיל 8","fit":"no","sources":1,"note":"אומגה — מגיל 8."},{"cat":"פארקי שעשועים והרפתקאות","name":"Geisterberg (St. Johann/Alpendorf)","region":"פונגאו","dist":"~1.5 ש'","mins":90,"fitText":"🟡 טוב","fit":"partial","sources":2,"note":"רכבל להרפתקאות בטבע, שקופיות מים."},{"cat":"פארקי שעשועים והרפתקאות","name":"Wagrains Grafenberg","region":"Wagrain","dist":"~1.5 ש'","mins":90,"fitText":"🟢 מצוין","fit":"good","sources":2,"note":"פארק + רכבל. (לבדוק אם פתוח — היה 'סגור זמנית')."},{"cat":"פארקי שעשועים והרפתקאות","name":"Abenteuerpark Gröbming","region":"גרובמינג","dist":"~40 דק'","mins":40,"fitText":"🟡 רק 4.5","fit":"partial","sources":1,"note":"פארק חבלים."},{"cat":"פארקי שעשועים והרפתקאות","name":"DeinBerg","region":"שאלדמינג","dist":"~1 ש'","mins":60,"fitText":"🟡 רק 4.5","fit":"partial","sources":1,"note":"פארק הרפתקאות."},{"cat":"פארקי שעשועים והרפתקאות","name":"Fort Kniepass","region":"לופר","dist":"~1.5 ש'","mins":90,"fitText":"🟡 רק 4.5","fit":"partial","sources":1,"note":"פארק הרפתקאות."},{"cat":"פארקי שעשועים והרפתקאות","name":"ההר של בובי (Bobby's)","region":"שאלדמינג","dist":"~1 ש'","mins":60,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"רכבל לפארק משחקים + אגם סירות."},{"cat":"פארקי שעשועים והרפתקאות","name":"Timoks Alpine Coaster","region":"Serfaus-Fiss (טירול)","dist":"~3 ש'","mins":180,"fitText":"🟡 רק 4.5","fit":"partial","sources":1,"note":"פארק חבלים. רחוק מדי."},{"cat":"פארקי שעשועים והרפתקאות","name":"JO Adventure Minigolf","region":"פונגאו","dist":"~1.5 ש'","mins":90,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"מיני-גולף הרפתקאות."},{"cat":"פארקי משחקים לילדים","name":"Rucki Zucki Gaudi Alm","region":"פונגאו","dist":"~1.5 ש'","mins":90,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"פארק שעשועים. פתוח 07:30."},{"cat":"פארקי משחקים לילדים","name":"Spielplatz Wildkogelalm","region":"פינצגאו","dist":"~1.5-2 ש'","mins":120,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"פארק משחקים על ההר."},{"cat":"פארקי משחקים לילדים","name":"Kugelbahn Bobby's (Station 2)","region":"שאלדמינג","dist":"~1 ש'","mins":60,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"מסלול כדורים + משחקים."},{"cat":"בעלי חיים","name":"Wild-und-Freizeitpark Untertauern","region":"בין שאלדמינג לפלכאו","dist":"~1 ש'","mins":60,"fitText":"🟢 מצוין","fit":"good","sources":2,"note":"גן חיות פתוח (צבאים, איילים). כניסה חופשית."},{"cat":"בעלי חיים","name":"Fürbach Alpaka","region":"פינצגאו","dist":"~1.5 ש'","mins":90,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"חוות אלפקות, מגע. בטוח לשתיהן."},{"cat":"בעלי חיים","name":"Wild & Adventure Park Ferleiten","region":"פינצגאו","dist":"~2 ש'","mins":120,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"זואו + פארק, בדרך ל-Grossglockner."},{"cat":"היסטוריה ותרבות","name":"Fräulein Maria's Bicycle Tour (צלילי המוזיקה)","region":"זלצבורג (עיר)","dist":"~ 1-1.5 ש'","mins":90,"fitText":"טוב לנועה · לבדוק לאריאל (עגלת אופניים 3.5 ש')","fit":"partial","sources":1,"note":"ק\"מ, 3.5 ש', יוצא 09:30 (בקיץ גם 16:30). עגלת אופניים לילדים, שירה+סיפור באתרי הצילומים. לוודא התאמת עגלה לגיל 1.5 ואפשרות יציאה מוקדמת"},{"cat":"היסטוריה ותרבות","name":"Burg Hohenwerfen","region":"Werfen","dist":"~1 ש'","mins":60,"fitText":"🟡 טוב","fit":"partial","sources":2,"note":"מצודה + מופע ציפורי טרף."},{"cat":"היסטוריה ותרבות","name":"Fortress Hohensalzburg","region":"זלצבורג","dist":"~1-1.5 ש'","mins":90,"fitText":"🟡 טוב","fit":"partial","sources":1,"note":"מבצר, רכבל עולה."},{"cat":"היסטוריה ותרבות","name":"Salzwelten Hallein","region":"Bad Dürrnberg","dist":"~1 ש'","mins":60,"fitText":"🟡 טוב","fit":"partial","sources":2,"note":"מכרה מלח, רכבת + מגלשה.","url":"https://www.salzwelten.at/en/hallein"},{"cat":"היסטוריה ותרבות","name":"Salzwelten Salzburg","region":"זלצבורג","dist":"~1-1.5 ש'","mins":90,"fitText":"🟡 טוב","fit":"partial","sources":1,"note":"מכרה מלח."},{"cat":"היסטוריה ותרבות","name":"Salt Mine Berchtesgaden","region":"ברכטסגאדן (גרמניה)","dist":"~1.5 ש'","mins":90,"fitText":"🟡 טוב","fit":"partial","sources":2,"note":"מכרה מלח בגבול גרמניה."},{"cat":"היסטוריה ותרבות","name":"Haus der Natur","region":"זלצבורג","dist":"~1-1.5 ש'","mins":90,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"מוזיאון טבע — קלף גשם מעולה."},{"cat":"היסטוריה ותרבות","name":"Mozart's Birthplace","region":"זלצבורג","dist":"~1-1.5 ש'","mins":90,"fitText":"🔴 פחות מתאים","fit":"no","sources":1,"note":"אתר — פחות לפעוטות."},{"cat":"היסטוריה ותרבות","name":"Keltendorf","region":"פונגאו","dist":"~1.5 ש'","mins":90,"fitText":"🟡 טוב","fit":"partial","sources":1,"note":"מוזיאון פתוח קלטי + משחקים."},{"cat":"היסטוריה ותרבות","name":"Sound of Music Pavilion","region":"זלצבורג","dist":"~1-1.5 ש'","mins":90,"fitText":"🟡 קצר","fit":"partial","sources":1,"note":"עצירה קצרה וקלילה."},{"cat":"קארטינג/אתגרי","name":"Mountain Gokart","region":"אבטנאו/גרובמינג","dist":"~40-60 דק'","mins":60,"fitText":"🟡 רק 4.5","fit":"partial","sources":1,"note":"קארטינג הרים."},{"cat":"קארטינג/אתגרי","name":"Paragliding Zell am See","region":"פינצגאו","dist":"~1.5-2 ש'","mins":120,"fitText":"🔴 מבוגרים","fit":"no","sources":1,"note":"צניחה — מבוגרים בלבד."},{"cat":"גבול גרמניה","name":"Königssee","region":"ברכטסגאדן (גרמניה)","dist":"~1.5 ש'","mins":90,"fitText":"🟢 מצוין","fit":"good","sources":2,"note":"אגם + שייט."},{"cat":"גבול גרמניה","name":"Berchtesgaden","region":"גרמניה","dist":"~1.5 ש'","mins":90,"fitText":"🟡 טוב","fit":"partial","sources":2,"note":"עיירה + אטרקציות סביב."},{"cat":"סוסים ורכיבה","name":"Islandpferdehof Platzl (אוברטראון)","region":"אוברטראון (בבסיס!)","dist":"5 דק'","mins":5,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"חוות סוסי איסלנד בבסיס עצמו. רכיבת ילדים באולם או טיול בסביבה, ומסלולים לאורך חוף אגם הלשטט. להתקשר מראש."},{"cat":"סוסים ורכיבה","name":"Pferdehof Reiter (גוסאו)","region":"זלצקמרגוט","dist":"30-40 דק'","mins":40,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"רכיבת פוני לקטנים + שיעורים. ליד Gosausee — אפשר לשלב באותו יום."},{"cat":"סוסים ורכיבה","name":"רכיבת פוני Filzmoos","region":"פונגאו","dist":"~1.5 ש'","mins":90,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"רכיבת פוני לילדים באזור פונגאו."},{"cat":"מגלשות קיץ (Coaster)","name":"Grünberg-Flitzer (גמונדן)","region":"זלצקמרגוט","dist":"~1 ש'","mins":60,"fitText":"🟡 רק 4.5","fit":"partial","sources":1,"note":"המזחלת הכי קרובה לבסיס — 1.4 ק\"מ, אפשר לרכוב עם מבוגר. באותו הר: גן שעשועים, פארק חבלים נמוך, ושביל צמרות עצים עם מגדל תצפית 39 מ' (מתאים לעגלה). יום שלם באתר אחד."},{"cat":"אופניים סביב אגמים","name":"Ostuferradweg — אגם הלשטט","region":"אוברטראון (בבסיס!)","dist":"מהבסיס","mins":5,"fitText":"🟢 מצוין","fit":"good","sources":2,"note":"שביל שטוח לאורך אגם הלשטט מאוברטראון לבאד גויזרן. השכרת אופניים באוברטראון עצמה — אופני ילדים, מושבי תינוק וקסדות."},{"cat":"אופניים סביב אגמים","name":"Koppental Radweg (אוברטראון—באד אאוסה)","region":"אוברטראון (בבסיס!)","dist":"מהבסיס","mins":5,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"8 ק\"מ, חלקו על מסילת רכבת ישנה — שטוח לגמרי. אידיאלי עם ילדים."},{"cat":"אופניים סביב אגמים","name":"Chorinsky-Klause (באד גויזרן)","region":"זלצקמרגוט","dist":"~30 דק'","mins":30,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"טיול אופניים משפחתי דרך עמק Weißenbach. מתואר כמתאים במיוחד למשפחות עם ילדים."},{"cat":"אופניים סביב אגמים","name":"שביל אופניים סביב גרונדלזה","region":"גרונדלזה","dist":"בבסיס 16-17.08","mins":5,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"הצד הצפוני סלול לגמרי, לאורך האגם עם מקומות מנוחה ומסעדות. בבסיס שלכם ב-16-17.08."},{"cat":"אגמים ועיירות","name":"סיור שלושת האגמים (גרונדלזה)","region":"גרונדלזה","dist":"בבסיס 16-17.08","mins":5,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"שייט מגרונדלזה ← הליכה 20 דק' ← Toplitzsee ← סירת עץ מסורתית ← Kammersee. 3-4 שעות, מתואר ככיף אידיאלי עם ילדים."},{"cat":"פארקי שעשועים והרפתקאות","name":"Wald-Erlebnis-Park Gosau (מיני-קלטרפארק)","region":"זלצקמרגוט","dist":"30-40 דק'","mins":40,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"מסלול חבלים נמוך (0.5-1 מ') בלי ציוד, מתאים מגיל 4. ממש בגוסאו — משלב עם Gosausee באותו יום. יש גם מסלול גבוה למבוגרים."},{"cat":"היסטוריה ותרבות","name":"Keltendorf Salina (כפר קלטי, האליין)","region":"Bad Dürrnberg (Hallein)","dist":"~1 ש'","mins":60,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"כפר קלטי + גן שעשועים צמוד למכרה המלח — בדיוק בשביל ילדים מתחת ל-4 שלא נכנסים למכרה. הפתרון לאריאל."},{"cat":"אגמים ועיירות","name":"Bluntauseen (2 אגמים)","region":"טננגאו","dist":"~1 ש'","mins":60,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"שני אגמים צלולים ליד מפל גולינג. רחב וישר — מתאים לעגלה. האכלת דגים מותרת, כיף לילדים."},{"cat":"מסעדות איטלקיות","name":"Pizzeria Kegelbahn (אוברטראון)","region":"זלצקמרגוט","dist":"5 דק'","mins":5,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"פיצרייה במיקום נוח מאוד בבסיס שלכם באוברטראון, פתוחה עד מאוחר. נהדרת לערבים שחוזרים עייפים."},{"cat":"מסעדות איטלקיות","name":"Gasthaus Zur Mühle (Hallstatt)","region":"זלצקמרגוט","dist":"10 דק'","mins":10,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"משלבת אוכל מקומי ואיטלקי, מתאימה מאוד לפיצה או פסטה אחרי יום טיול בעיירה הלשטט."},{"cat":"מסעדות איטלקיות","name":"Pizzeria Bella Italia (באד אאוסה)","region":"זלצקמרגוט","dist":"20 דק'","mins":20,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"מסעדה איטלקית קלאסית שמציעה פיצות מטאבון עצים, פסטות מעולות וקינוחים איטלקיים מסורתיים."},{"cat":"מסעדות איטלקיות","name":"Pizzeria da Mario (Schladming)","region":"שאלדמינג","dist":"~1 ש'","mins":60,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"מסעדה אהובה בשאלדמינג עם תפריט רחב שילדים אוהבים, סוגרת פינה ביום שמבלים בפארק על ההר."},{"cat":"מסעדות איטלקיות","name":"Ristorante Amalfi (Schladming)","region":"שאלדמינג","dist":"~1 ש'","mins":60,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"פיצריה ופסטה באווירה משפחתית חמימה, קרובה לאזורי האטרקציות של שאלדמינג."},{"cat":"מסעדות איטלקיות","name":"Pizzeria Giovanni (Radstadt)","region":"שאלדמינג","dist":"~50 דק'","mins":50,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"תפריט איטלקי עשיר במרחק קצר ממסלולי האופניים ואטרקציות האזור."},{"cat":"מסעדות איטלקיות","name":"Pizzeria Da Guido (Hallein)","region":"טננגאו","dist":"~1 ש'","mins":60,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"אופציה מעולה לארוחת צהריים או ערב אחרי ביקור במכרה המלח או המגלשות בהאליין."},{"cat":"מסעדות איטלקיות","name":"Ristorante Pizzeria Cavallo (Golling)","region":"טננגאו","dist":"~50 דק'","mins":50,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"מסעדה איטלקית נהדרת, קרובה מאוד למפל גולינג. מצוינת לשילוב ביום של המפל."},{"cat":"מסעדות איטלקיות","name":"Pizzeria-Ristorante Bella Rosa (Hallein)","region":"טננגאו","dist":"~1 ש'","mins":60,"fitText":"🟡 טוב","fit":"partial","sources":1,"note":"תפריט פיצות נרחב, מתאים למשפחות וממוקם בנוחות סמוך לכפר הקלטי."},{"cat":"מסעדות איטלקיות","name":"L'Osteria (Salzburg)","region":"זלצבורג העיר","dist":"~1-1.5 ש'","mins":90,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"רשת ידועה עם פיצות ענקיות ודקות במיוחד (אפשר לחלק חצי-חצי עם תוספות שונות), אווירה תוססת ושירות מהיר. מעולה לילדים."},{"cat":"מסעדות איטלקיות","name":"Ristorante da Ciro (Salzburg)","region":"זלצבורג העיר","dist":"~1-1.5 ש'","mins":90,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"פיצריה אותנטית במרכז זלצבורג עם מחירים הוגנים ושירות מסביר פנים למשפחות."},{"cat":"מסעדות איטלקיות","name":"Pizzeria Il Sole (Salzburg)","region":"זלצבורג העיר","dist":"~1-1.5 ש'","mins":90,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"מקום קלאסי לאכול בו פסטות טריות ופיצות לפני שחוזרים לנסיעה למקום הלינה."},{"cat":"מסעדות איטלקיות","name":"Pizzeria Toscana (Flachau)","region":"פונגאו","dist":"~1.5 ש'","mins":90,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"ממוקמת קרוב ללאקי פליצר, נוח מאוד לעצור בה אחרי אחר הצהריים במגלשות."},{"cat":"מסעדות איטלקיות","name":"Ristorante Pizzeria Alte Schmiede (Wagrain)","region":"פונגאו","dist":"~1.5 ש'","mins":90,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"אופציה משפחתית נוחה לאחר ביקור בוואגרין או גראפנברג, עם פיצות קריספיות."},{"cat":"מסעדות איטלקיות","name":"Da Giorgio (St. Johann)","region":"פונגאו","dist":"~1.5 ש'","mins":90,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"מקום מרווח וידידותי למשפחות, נמצא קרוב להרפתקאות סנט יוהאן."},{"cat":"מסעדות איטלקיות","name":"Ristorante Giuseppe (Zell am See)","region":"פינצגאו","dist":"~1.5-2 ש'","mins":100,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"מסעדה איטלקית נהדרת וותיקה במרכז זל אם זה. מאוד פופולרית ולעיתים מצריכה המתנה קלה."},{"cat":"מסעדות איטלקיות","name":"Pizzeria Paletti (Kaprun)","region":"פינצגאו","dist":"~1.5-2 ש'","mins":100,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"פיצריה נעימה בקפרון, טובה לשילוב עם טיול בנקיק זיגמונד-טון."},{"cat":"מסעדות איטלקיות","name":"Pizzeria Aydin (Zell am See)","region":"פינצגאו","dist":"~1.5-2 ש'","mins":100,"fitText":"🟡 טוב","fit":"partial","sources":1,"note":"מקום קליל יותר שמוכר גם סוגי מזון מהיר נוספים, פתרון נהדר ופרקטי עם בנות כשרעבים מהר."},{"cat":"מסעדות ובתי קפה","name":"Seecafé Obertraun","region":"זלצקמרגוט","dist":"5 דק'","mins":5,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"בית קפה־מסעדה ממש על שפת אגם הלשטט באוברטראון, ליד אזור הרחצה. הכי נוח לארוחה קלה אחרי הבריכה.","url":"https://www.obertraun.net/restaurants-en-us-2/"},{"cat":"מסעדות ובתי קפה","name":"Koppenrast (אוברטראון)","region":"זלצקמרגוט","dist":"5 דק'","mins":5,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"פונדק ביתי למרגלות מעבר קופן עם גן מוצל. פופולרי אצל מטיילים ורוכבי אופניים — מתאים לשילוב עם שביל קופנטל."},{"cat":"מסעדות איטלקיות","name":"Pizzeria Siena (גוסאו)","region":"זלצקמרגוט","dist":"30-40 דק'","mins":40,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"פיצרייה איטלקית בגוסאו. רביעי–ראשון 11:00–22:00 (המטבח עד 21:30). טוב לשלב עם גוסאוזה או פארק החבלים.","url":"https://www.siena-pizzeria.at"},{"cat":"מסעדות איטלקיות","name":"Brandwirt (גוסאו) — פיצה לקחת","region":"זלצקמרגוט","dist":"30-40 דק'","mins":40,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"פונדק מסורתי עם שניצל וצלי, וגם דלפק «פיצה לקחת» — פתרון טוב לערב שלא רוצים לשבת במסעדה.","url":"https://www.brandwirt.at"},{"cat":"מסעדות ובתי קפה","name":"Restaurant Im Kainz (הלשטט)","region":"זלצקמרגוט","dist":"10 דק'","mins":10,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"מסעדה במרכז הלשטט, מוזכרת בביקורות כמקום שחוזרים אליו לבוקר ולערב כמה ימים ברצף."},{"cat":"מסעדות ובתי קפה","name":"Bräugasthof (הלשטט)","region":"זלצקמרגוט","dist":"10 דק'","mins":10,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"פונדק היסטורי עם מרפסת על האגם. הנוף הוא חצי מהעניין — שווה להזמין שולחן בחוץ."},{"cat":"מסעדות ובתי קפה","name":"Moserwirt (באד גויזרן)","region":"זלצקמרגוט","dist":"~25 דק'","mins":25,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"אירוח אוסטרי מסורתי באווירה חמימה. נוח לשילוב עם טיול האופניים לכיוון באד גויזרן.","url":"https://www.moserwirt.at"},{"cat":"מסעדות איטלקיות","name":"Pizzeria Jolly (Schönau am Königssee)","region":"ברכטסגאדן (גרמניה)","dist":"~1.5 ש'","mins":90,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"פיצה מטאבון עצים ופסטות, עם מרפסת. מומלץ להזמין — מתמלא בשעות שיא. יש גם טייק אווי.","url":"https://www.pizza-schoenau.de/"},{"cat":"מסעדות איטלקיות","name":"Pizzeria Lago (Königssee)","region":"ברכטסגאדן (גרמניה)","dist":"~1.5 ש'","mins":90,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"בדיוק בסוף המסלול מהקניגסזה ל-Malerwinkel וחזרה — הכי נוח לארוחה אחרי השייט."},{"cat":"מסעדות ובתי קפה","name":"Echostüberl (על שפת הקניגסזה)","region":"ברכטסגאדן (גרמניה)","dist":"~1.5 ש'","mins":90,"fitText":"🟢 מצוין","fit":"good","sources":1,"note":"ממש על האגם, 180 מקומות במרפסת השמש. מתמחה בדגי הקניגסזה (זאב־מים ופורל)."},{"cat":"מגלשות קיץ (Coaster)","name":"Sommerrodelbahn Strobl (Wolfgangsee)","region":"זלצקמרגוט","dist":"~40-50 דק'","mins":50,"fitText":"🟡 נועה עם מבוגר · אריאל לא (מגיל 3)","fit":"partial","sources":1,"url":"https://rodelnamsee.at/","note":"2 מסלולים מקבילים, 1,300 מ' כל אחד, 160 מ' הפרש גובה. מגיל 3 ילדים רוכבים עם מבוגר; מגיל 8 לבד — כלומר נועה כן, אריאל עדיין לא. המהירות נשלטת אישית, ומעלית מחזירה למעלה כך שאפשר לחזור שוב ושוב. ליד B158 בגשוונדט. 20% הנחה עם Salzkammergut SommerCard. טל' +43 6137 7085."}],"budapest":[{"cat":"אטרקציות וחיות","name":"חוות פוני - piczinke poni udvar","where":"לא במרחק הליכה (באזור יער נורמפה). מומלץ לקחת מונית של כ-30 דקות. יכול להיות חצי-יום טיול נהדר עבורן.","mins":null,"fitText":"מצוין","note":"-"},{"cat":"אטרקציות","name":"גלגל ענק - ferris wheel of Budapest","where":"כ-15 דקות הליכה","mins":15,"fitText":"מצוין","note":"5 דק' הליכה משם יש גלידת פרח מפורסמת. נהנו מאוד."},{"cat":"מוזיאונים","name":"מוזיאון האשליות - illuziok muzeuma","where":"כ-20 דקות הליכה","mins":20,"fitText":"מצוין","note":"פעילות של כ-40 דקות עד שעה."},{"cat":"אטרקציות","name":"חדר בריחה של ברבי","where":"כ-25 דקות הליכה (בהנחה שמדובר בחדר של רשת כמו Magic Rooms)","mins":25,"fitText":"מצוין","note":"-"},{"cat":"אטרקציות לילדים","name":"מיניאפוליס - Minipolisz","where":"כ-20 דקות הליכה","mins":20,"fitText":"מצוין","note":"סגור בשני ושלישי. יש בפנים סופר, פיצרייה, מוסך ובנק לקטנים."},{"cat":"אטרקציות וחיות","name":"גן החיות המפורסם","where":"כ-50 דקות הליכה. מומלץ מאוד להיעזר במטרו (קו M1 הנגיש), נסיעה של כ-20 דקות.","mins":50,"fitText":"מצוין","note":"מומלץ מאוד. בכניסה ניתן להשכיר מעין עגלה לילדים."},{"cat":"קניות","name":"קניון ארנה","where":"כ-45 דקות הליכה. מומלץ לקחת אוטובוס או את קו המטרו M2.","mins":45,"fitText":"מצוין","note":"שופינג טוב לילדים."},{"cat":"אטרקציות","name":"היכל גיימינג","where":"תלוי בסניף הספציפי, אך רובם לא במרחק הליכה קצר מהמרכז ומצריכים נסיעה קצרה.","mins":null,"fitText":"מצוין","note":"מתאים לכל הגילאים, הבנות מאוד נהנו."},{"cat":"פארקים","name":"גני שעשועים","where":"משתנה - הפארק הקרוב והמומלץ ביותר (Károlyi Kert) נמצא רק כ-5 דקות הליכה מהמלון ונהדר לגילאים שלהן.","mins":5,"fitText":"מצוין","note":"נחמד להעביר זמן ולפרוק אנרגיה על הדרך."},{"cat":"מופעים","name":"Municipal Circus of Budapest","where":"כ-50 דקות הליכה (ממוקם ממש ליד גן החיות, כדאי לקפוץ למטרו M1).","mins":50,"fitText":"חלקי","note":"מותאם לילדים, יש לבדוק מופעים בגוגל. פחות מתאים לילד שמתקשה לשבת לאורך זמן."},{"cat":"מסעדות ואוכל","name":"ארוחת בוקר ב-Circusz","where":"כ-20 דקות הליכה","mins":20,"fitText":"מצוין","note":"אוכל מעולה גם לילדים. חובה להזמין מקום מראש."},{"cat":"מסעדות ואוכל","name":"ארוחת בוקר ב-Stika","where":"כ-25 דקות הליכה","mins":25,"fitText":"מצוין","note":"חובה להזמין מקום מראש."},{"cat":"מסעדות ואוכל","name":"ארוחת ערב במסעדת ״המשוגע״","where":"כ-20 דקות הליכה (ממוקמת באזור הבילויים של הגוז'דו)","mins":20,"fitText":"מצוין","note":"מסעדה ישראלית. חובה להזמין מקום מראש."},{"cat":"מסעדות ואוכל","name":"בית קפה ״יוניקורן״","where":"כ-30 דקות הליכה","mins":30,"fitText":"מצוין (לחוויה)","note":"מלהיב בנות ונחמד להצטלם, האוכל נוראי. חובה להזמין מקום."},{"cat":"מסעדות ואוכל","name":"קיורטוש ברחובות","where":"1-5 דקות (ישנם דוכנים רבים ממש מחוץ למלון באזור מדרחוב ואצי)","mins":5,"fitText":"מצוין","note":"חובה לנסות."},{"cat":"שירותים ונוחות","name":"מכבסה","where":"כ-10 דקות הליכה (למשל למכבסת Bubbles הקרובה בשירות עצמי)","mins":10,"fitText":"להורים","note":"בתשלום סמלי, נקי מאוד ומומלץ כדי לחזור בלי כביסה."},{"cat":"שירותים ונוחות","name":"השכרת ציוד","where":"תלוי בסוג הציוד והחנות הספציפית","mins":null,"fitText":"להורים","note":"מומלץ (הוזמן מ-Lottirose, מרוצים מהשירות)."},{"cat":"מסעדות ואוכל","name":"Zoo Café (קפה חיות העיר)","where":"3 עד 5 דקות הליכה (ממש קרוב למלון!)","mins":5,"fitText":"מצוין","note":"חיות (ארנבים, צבים, זיקיות) מגיעות ישירות לשולחן לליטוף. חובה להזמין מקום מראש!"},{"cat":"מסעדות ואוכל","name":"Sugar! Design Confectionery","where":"כ-25 דקות הליכה","mins":25,"fitText":"מצוין","note":"קונדיטוריה מעוצבת באווירת \"צ'ארלי בממלכת השוקולד\". עוגות צבעוניות ועיצוב מלהיב."},{"cat":"מסעדות ואוכל","name":"The MAGIC (קפה הקסמים)","where":"כ-30 דקות הליכה","mins":30,"fitText":"מצוין","note":"בית קפה ומסעדה בעיצוב טירה קסומה (סגנון הארי פוטר). מנות עם אפקטים מיוחדים שמצטלמות נהדר."},{"cat":"מסעדות ואוכל","name":"Maminti Kuckó","where":"לא במרחק הליכה (נמצא בצד של בודה). מומלץ לקחת אוטובוס או חשמלית.","mins":null,"fitText":"מצוין (במיוחד לקטנטנים)","note":"מותאם במיוחד לתינוקות ופעוטות. כולל פינת זחילה, שטיחים רכים וצעצועים."},{"cat":"מסעדות ואוכל","name":"Cat Cafe (קפה חתולים)","where":"כ-25 דקות הליכה","mins":25,"fitText":"מצוין","note":"חתולים מסתובבים חופשי ברחבי בית הקפה, ניתן ללטף ולשחק איתם."},{"cat":"מסעדות ואוכל","name":"Pirate Empire (אימפריית הפיראטים)","where":"כ-30 דקות הליכה","mins":30,"fitText":"מצוין","note":"מסעדה ובית קפה שמעוצבים כמו ספינת שודדי ים מושקעת."},{"cat":"מסעדות איטלקיות","name":"IL LAGO Ristorante (Balatonfüred)","where":"אזור בלטון (לימים הראשונים)","mins":null,"fitText":"מצוין","note":"מסעדה איטלקית בעיצוב עכשווי ממש על טיילת האגם. פיצות מקמח איטלקי, פסטות מצוינות ונוף לנמל."},{"cat":"מסעדות איטלקיות","name":"Mauro Ristorante Pizzeria (Zamárdi)","where":"אזור בלטון (לימים הראשונים)","mins":null,"fitText":"מצוין","note":"אחת המסעדות האיטלקיות המוכרות באזור, במרחק נסיעה קצרצר מהריזורט בשאנטוד."},{"cat":"מסעדות איטלקיות","name":"Ciao Ciao Italia (Zamárdi)","where":"אזור בלטון (לימים הראשונים)","mins":null,"fitText":"מצוין","note":"מסעדה איטלקית שמקבלת ביקורות מעולות על אווירה נעימה ואוכל אותנטי."}],"carry":["מטבעות לחניה","מחזיק אייפד לרכב","רישיון נהיגה בינלאומי","דרכונים","מזומן","עגלה + מנשא","מתאמי חשמל","תרופות","כיסא בטיחות לרכב","צידנית לאוכל"],"allergies":["בלי בצל / עגבניות / כוסברה / בוטנים","בשר עשוי היטב"]};
+
+/* ================= storage ================= */
+/* Some sandboxes (artifact preview) block localStorage outright. Probe once,
+   fall back to an in-memory map so the planner still runs — it just forgets
+   between reloads there. Opened as a normal file, this is real persistence. */
+const MEM = new Map();
+const STORE = (() => {
+  try {
+    const k = "__probe__";
+    localStorage.setItem(k, "1");
+    localStorage.removeItem(k);
+    return {
+      get: (k) => localStorage.getItem(k),
+      set: (k, v) => localStorage.setItem(k, v),
+      persistent: true,
+    };
+  } catch (e) {
+    return {
+      get: (k) => (MEM.has(k) ? MEM.get(k) : null),
+      set: (k, v) => { MEM.set(k, v); },
+      persistent: false,
+    };
+  }
+})();
+
+/* ================= state ================= */
+const KEY = "aus-hun-2026";
+const blank = () => ({ v: 2, edits: {}, checks: {}, extraTasks: {}, favs: {}, plan: {} });
+let S = blank();
+try {
+  const raw = STORE.get(KEY);
+  if (raw) S = Object.assign(blank(), JSON.parse(raw));
+} catch (e) { /* unreadable store — start clean rather than break the page */ }
+const save = () => { try { STORE.set(KEY, JSON.stringify(S)); } catch (e) {} };
+
+const val = (day, f) => (S.edits[day.date] && f in S.edits[day.date]) ? S.edits[day.date][f] : day[f];
+const edited = (day, f) => !!(S.edits[day.date] && f in S.edits[day.date]);
+function setVal(day, f, text) {
+  const t = text.trim();
+  S.edits[day.date] = S.edits[day.date] || {};
+  if (t === (day[f] || "")) delete S.edits[day.date][f];
+  else S.edits[day.date][f] = t;
+  if (!Object.keys(S.edits[day.date]).length) delete S.edits[day.date];
+  save();
+}
+
+/* ---- the plan: two lanes per day, seeded from the sheet on first open ---- */
+let uid = Date.now();
+const newId = () => "i" + (++uid).toString(36);
+const AUT_BY_NAME = new Map(DATA.austria.map((a) => [a.name, a]));
+const BUD_BY_NAME = new Map(DATA.budapest.map((a) => [a.name, a]));
+
+/* The sheet writes attractions loosely — "Rucki Zucki (פארק)" for
+   "Rucki Zucki Gaudi Alm", the Hebrew nickname for Berg der Sinne. Linking a
+   cell back to its library row is what gives the day its drive time. */
+const ALIAS = { "הר החושים": "Berg der Sinne (Asitzbahn, לאוגנג)" };
+const norm = (s) => s.toLowerCase().replace(/[()[\]{}.,/|+*'"־–—-]/g, " ").replace(/\s+/g, " ").trim();
+const tokens = (s) => norm(s).split(" ").filter((w) => w.length >= 4);
+const LIBRARY = DATA.austria.map((a) => ({ a, kind: "austria", t: tokens(a.name) }))
+  .concat(DATA.budapest.map((a) => ({ a, kind: "budapest", t: tokens(a.name) })));
+
+function linkAttraction(text) {
+  const head = text.split(" — ")[0].trim();
+  const aliased = ALIAS[head] || ALIAS[text.trim()];
+  if (aliased) return { a: AUT_BY_NAME.get(aliased), kind: "austria" };
+  const exact = AUT_BY_NAME.get(head) || AUT_BY_NAME.get(text.trim());
+  if (exact) return { a: exact, kind: "austria" };
+  const exactB = BUD_BY_NAME.get(head) || BUD_BY_NAME.get(text.trim());
+  if (exactB) return { a: exactB, kind: "budapest" };
+  // fall back to shared significant words — two is enough to be sure
+  const ht = tokens(head);
+  let best = null, bestScore = 1;
+  if (ht.length >= 2) {
+    LIBRARY.forEach((e) => {
+      const score = e.t.filter((w) => ht.includes(w)).length;
+      if (score > bestScore) { bestScore = score; best = e; }
+    });
+  }
+  if (best) return best;
+  // last resort: a whole library name sitting inside the cell ("Reiteralm (טרמפולינות)")
+  const hay = " " + norm(text) + " ";
+  let longest = null;
+  LIBRARY.forEach((e) => {
+    const n = norm(e.a.name);
+    if (n.length < 6 || !hay.includes(" " + n + " ")) return;
+    if (!longest || n.length > norm(longest.a.name).length) longest = e;
+  });
+  return longest;
+}
+
+function makeItem(text, kind) {
+  const t = (text || "").trim();
+  if (!t) return null;
+  const link = linkAttraction(t);
+  const hit = link && link.a;
+  return {
+    id: newId(),
+    name: hit ? hit.name : t,
+    note: hit ? (t.split(" — ").slice(1).join(" — ") || (hit.note !== "-" ? hit.note : "")) : "",
+    mins: hit ? hit.mins : null,
+    fit: hit ? hit.fit : null,
+    kind: kind || (link ? link.kind : "free"),
+  };
+}
+function planOf(day) {
+  if (!S.plan[day.date]) {
+    S.plan[day.date] = {
+      plan: [makeItem(val(day, "pick"))].filter(Boolean),
+      alt: [makeItem(val(day, "alt")), makeItem(val(day, "extra"))].filter(Boolean),
+    };
+  }
+  const p = S.plan[day.date];
+  p.plan = p.plan || []; p.alt = p.alt || [];
+  return p;
+}
+const dayByDate = (d) => DATA.days.find((x) => x.date === d);
+const itemFromAttraction = (a, kind) => ({
+  id: newId(), name: a.name, note: a.note && a.note !== "-" ? a.note : "",
+  mins: a.mins, fit: a.fit || null, kind,
+});
+
+/* ================= helpers ================= */
+/* `main` owns the scrolling (see the app-shell rules), so anything that used
+   to move the window has to move this instead or it silently no-ops. */
+const scroller = () => document.getElementById("main") || document.scrollingElement;
+
+const el = (t, c, x) => { const n = document.createElement(t); if (c) n.className = c; if (x != null) n.textContent = x; return n; };
+const REGION_LABEL = { balaton: "בלטון", grundlsee: "גרונדלזה", obertraun: "אוברטראון", budapest: "בודפשט", home: "בית" };
+const FIT_LABEL = { good: "מתאים לשתיהן", partial: "בהתאמה", no: "לא לגילאים שלנו" };
+const TODAY = new Date();
+const localISO = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+const TODAY_ISO = localISO(TODAY);
+const isToday = (d) => d.iso === TODAY_ISO;
+const isPast = (d) => d.iso < TODAY_ISO;
+const hhmm = (m) => `${Math.floor(m / 60)}:${String(m % 60).padStart(2, "0")}`;
+
+/* ---- the trip runs in two legs: we start alone, friends join on the 19th ---- */
+const FRIENDS_FROM = "2026-08-19";
+const legOf = (d) => (d.iso < FRIENDS_FROM ? "us" : "friends");
+/* Order matters: this is shared with everyone on the trip, and the friends
+   only join on the 19th, so their leg leads and is what a fresh load shows.
+   Tal & Eran are here from the 14th — #board/all gets them the whole thing. */
+const LEGS = {
+  friends: { label: "עם החברים", sub: "19–25.08", keep: (d) => legOf(d) === "friends" },
+  all: { label: "כל הטיול", sub: "14–25.08", keep: () => true },
+  us: { label: "רק אנחנו", sub: "14–18.08", keep: (d) => legOf(d) === "us" },
+};
+const DEFAULT_LEG = "friends";
+let LEG = DEFAULT_LEG;
+const legDays = () => DATA.days.filter(LEGS[LEG].keep);
+
+function renderLegBar() {
+  const bar = document.getElementById("legbar");
+  bar.innerHTML = "";
+  bar.hidden = current !== "board" && current !== "days";
+  if (bar.hidden) return;
+  bar.appendChild(el("span", "flab", "מי בטיול"));
+  const seg = el("div", "seg");
+  Object.entries(LEGS).forEach(([k, cfg]) => {
+    const b = el("button");
+    b.appendChild(el("span", null, cfg.label));
+    b.appendChild(el("span", "lsub", cfg.sub));
+    b.setAttribute("aria-pressed", LEG === k ? "true" : "false");
+    b.addEventListener("click", () => {
+      LEG = k;
+      renderLegBar();
+      if (current === "board") renderBoard(); else renderDays();
+      syncHash();
+    });
+    seg.appendChild(b);
+  });
+  bar.appendChild(seg);
+}
+
+function legDivider() {
+  const d = el("div", "legdiv");
+  d.appendChild(el("span", "ln"));
+  d.appendChild(el("span", "lt", "👥 מכאן החברים איתנו · 19–25.08"));
+  d.appendChild(el("span", "ln"));
+  return d;
+}
+
+let toastTimer;
+function toast(msg, undo) {
+  const t = document.getElementById("toast");
+  t.innerHTML = "";
+  t.appendChild(el("span", null, msg));
+  if (undo) {
+    const b = el("button", null, "ביטול");
+    b.addEventListener("click", () => { undo(); t.classList.remove("on"); });
+    t.appendChild(b);
+  }
+  t.classList.add("on");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("on"), undo ? 5000 : 3000);
+}
+
+(function countdown() {
+  const start = new Date("2026-08-14T00:00:00"), end = new Date("2026-08-25T23:59:59");
+  const c = document.getElementById("countdown");
+  if (TODAY > end) { c.textContent = "הטיול הסתיים"; return; }
+  if (TODAY >= start) {
+    const n = DATA.days.findIndex(isToday);
+    c.textContent = n >= 0 ? `יום ${n + 1} מתוך 12` : "בטיול";
+    return;
+  }
+  const d = Math.ceil((start - TODAY) / 864e5);
+  c.textContent = d === 1 ? "מחר יוצאים" : `עוד ${d} ימים`;
+})();
+
+/* ================= drag engine ================= */
+/* Pointer-based so it works with a finger; every drag also has a button path
+   (the ⋯ move dialog) because drag-only would strand keyboard users. */
+/* Drag-and-drop was removed: on a phone it competed with scrolling, and the
+   hold-to-arm gesture it needed was undiscoverable. Everything it did is
+   available from the move dialog, which is reachable by tapping a card. */
+
+function moveItemTo(item, from, target) {
+  const { date, lane } = target;
+  const dupe = planOf(dayByDate(date))[lane]
+    .some((x) => x.name === item.name && x.id !== item.id);
+  if (dupe) { toast(`${item.name} כבר ברשימה של ${date}`); return false; }
+
+  if (from) {
+    const it = takeItem(from);
+    if (!it) return false;
+    putItem(target, it, target.idx);
+  } else {
+    putItem(target, item, target.idx);
+    if (navigator.vibrate) navigator.vibrate(10);
+  }
+  save();
+  toast(`${item.name} → ${date}`);
+  return true;
+}
+
+function takeItem(ref) {
+  const p = planOf(dayByDate(ref.date));
+  return p[ref.lane].splice(ref.idx, 1)[0];
+}
+function putItem(ref, item, idx) {
+  const p = planOf(dayByDate(ref.date));
+  p[ref.lane].splice(Math.max(0, Math.min(idx, p[ref.lane].length)), 0, item);
+}
+
+/* ================= board ================= */
+
+function dayLoad(day) {
+  const items = planOf(day).plan.filter((i) => i.kind === "austria" && i.mins);
+  if (!items.length) return null;
+  return Math.max(...items.map((i) => i.mins)) * 2;
+}
+
+function itemChip(item, ref) {
+  const c = el("div", "chip2");
+  c.tabIndex = 0;
+  c.setAttribute("role", "button");
+  c.setAttribute("aria-label", `${item.name}. הקש כדי להעביר ליום אחר`);
+  const b = el("span", "cbody");
+  b.appendChild(el("span", "cn", item.name));
+  const s = el("span", "cs");
+  if (item.mins) s.appendChild(el("span", "mins", item.kind === "budapest" ? `${item.mins} דק' הליכה` : `${item.mins} דק' נסיעה`));
+  if (item.fit) s.appendChild(el("span", null, FIT_LABEL[item.fit]));
+  if (item.note) s.appendChild(el("span", null, item.note.length > 46 ? item.note.slice(0, 46) + "…" : item.note));
+  if (s.children.length) b.appendChild(s);
+  c.appendChild(b);
+
+  const x = el("button", "cx", "✕");
+  x.setAttribute("aria-label", `הסר את ${item.name} מ-${ref.date}`);
+  x.addEventListener("click", (ev) => {
+    ev.stopPropagation();
+    const removed = takeItem(ref); save(); renderBoard();
+    toast(`${removed.name} הוסר`, () => { putItem(ref, removed, ref.idx); save(); renderBoard(); });
+  });
+  c.appendChild(x);
+
+  c.addEventListener("click", () => openMove(item, ref));
+  c.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openMove(item, ref); }
+    if (e.key === "Delete" || e.key === "Backspace") {
+      e.preventDefault();
+      const removed = takeItem(ref); save(); renderBoard();
+      toast(`${removed.name} הוסר`, () => { putItem(ref, removed, ref.idx); save(); renderBoard(); });
+    }
+  });
+  return c;
+}
+
+function laneEl(day, laneName, label, emptyText) {
+  const p = planOf(day)[laneName];
+  const lane = el("div", "lane" + (laneName === "alt" ? " alt" : ""));
+  lane.dataset.date = day.date;
+  lane.dataset.lane = laneName;
+  const lb = el("div", "lanelab");
+  lb.appendChild(el("span", null, label));
+  if (p.length) lb.appendChild(el("span", "cnt", String(p.length)));
+  lane.appendChild(lb);
+  const slots = el("div", "slots");
+  if (!p.length) slots.appendChild(el("div", "dropempty", emptyText));
+  p.forEach((item, idx) => slots.appendChild(itemChip(item, { date: day.date, lane: laneName, idx })));
+  lane.appendChild(slots);
+  return lane;
+}
+
+function renderBoard() {
+  const host = document.getElementById("view-board");
+  const y = scroller().scrollTop;
+  host.innerHTML = "";
+
+  const hint = el("div", "boardhint");
+  hint.appendChild(el("span", null, "🖐"));
+  const ht = el("span");
+  ht.innerHTML = "פתח את <b>«בנק אטרקציות»</b> למעלה, הקש על מקום ובחר <b>«לשבץ ליום»</b>. "
+    + "בין «התוכנית» ל«חלופות», או החוצה כדי להסיר. בלי עכבר? הקש על כרטיס ובחר יום מהרשימה.";
+  hint.appendChild(ht);
+  host.appendChild(hint);
+
+  const board = el("div", "board");
+  legDays().forEach((day, i) => {
+    if (LEG === "all" && i > 0 && legOf(day) === "friends"
+      && legOf(legDays()[i - 1]) === "us") board.appendChild(legDivider());
+
+    const a = el("article", "bday");
+    a.style.setProperty("--rc", `var(--${day.region})`);
+    if (isToday(day)) a.classList.add("today");
+    else if (isPast(day)) a.classList.add("past");
+
+    const h = el("header", "bdh");
+    const dt = el("span", "bdate");
+    dt.appendChild(el("b", null, day.date));
+    dt.appendChild(el("span", null, day.dow));
+    h.appendChild(dt);
+    h.appendChild(el("span", "bregion", REGION_LABEL[day.region]));
+    const st = el("span", "bstat");
+    const load = dayLoad(day);
+    if (load) {
+      const l = el("span", "load" + (load > 180 ? " hot" : ""), `🚗 ${hhmm(load)} הלוך-חזור`);
+      l.title = "זמן הנסיעה של האטרקציה הרחוקה ביותר בתוכנית, כפול שניים";
+      st.appendChild(l);
+    }
+    if (val(day, "flight")) st.appendChild(el("span", "load", "✈️ יום טיסה"));
+    if (legOf(day) === "friends") st.appendChild(el("span", "withpal", "👥 עם החברים"));
+    if (isToday(day)) st.appendChild(el("span", "tag-today", "היום"));
+    h.appendChild(st);
+    a.appendChild(h);
+
+    const lanes = el("div", "lanes");
+    lanes.appendChild(laneEl(day, "plan", "התוכנית", "עדיין ריק — הוסף מבנק האטרקציות"));
+    lanes.appendChild(laneEl(day, "alt", "חלופות", "מקום לגיבוי"));
+    a.appendChild(lanes);
+    board.appendChild(a);
+  });
+  host.appendChild(board);
+  scroller().scrollTop = y;
+}
+
+/* ================= pool drawer ================= */
+/* "area" = Tal's view (group by corner of the map); "drive" = the old one. */
+let GROUP_BY = STORE.get("groupBy") || "area";
+const setGroupBy = (v) => { GROUP_BY = v; STORE.set("groupBy", v); };
+
+/* ================= areas — group by where it is, not how far ================= */
+/* Tal's rule: pick an AREA for the day, then pick inside it. */
+const AREAS = [
+  { id:"base",      name:"הבסיס — זלצקמרגוט",     drive:"0–60 דק'",  c:"var(--obertraun)",
+    blurb:"הלשטט, גוסאוזה, דכשטיין — הכל מהדלת" },
+  { id:"schladming",name:"שאלדמינג / אנס",         drive:"~40-60 דק'",c:"var(--grundlsee)",
+    blurb:"פארקים על ההר, טרמפולינות, גן חיות חינם" },
+  { id:"tennengau", name:"טננגאו — גולינג/האליין", drive:"~1 ש'",     c:"var(--grundlsee)",
+    blurb:"מפל + מכרה מלח = יום אחד" },
+  { id:"salzburg",  name:"זלצבורג העיר",            drive:"~1-1.5 ש'", c:"var(--balaton)",
+    blurb:"מוזיאונים, מבצר, צלילי המוזיקה" },
+  { id:"pongau",    name:"פונגאו — פלכאו/וגרן",     drive:"~1.5 ש'",   c:"var(--balaton)",
+    blurb:"הכי צפוף באטרקציות — שווה יום שלם" },
+  { id:"pinzgau",   name:"פינצגאו — זל אם זה/לאוגנג",drive:"~1.5-2 ש'",c:"var(--budapest)",
+    blurb:"הר החושים, אלפקות, נקיקים" },
+  { id:"germany",   name:"גבול גרמניה — ברכטסגאדן", drive:"~1.5 ש'",   c:"var(--budapest)",
+    blurb:"דרכונים! אגם המלכים + מכרה" },
+  { id:"far",       name:"רחוק מדי — טירול/קרינתיה",drive:"2.5 ש'+",   c:"var(--crit)",
+    blurb:"לא ריאלי מהבסיס שלכם" },
+];
+const AREA_IX = new Map(AREAS.map((a, i) => [a.id, i]));
+
+/* name fragment -> area.  first match wins, so order matters. */
+const AREA_RULES = [
+  [/Hallstatt|Gosau|Dachstein|Krippenstein|Traunfall|Gilgen|Wolfgang|Gmunden|Grünberg|Platzl|Ostufer|Koppental|Chorinsky|גרונדלזה|שלושת האגמים|Salzwelten Hallstatt/i, "base"],
+  [/Reiteralm|Hopsiland|בובי|Bobby|Untertauern|Gröbming|DeinBerg|Kugelbahn|Stoderzinken|Planai/i, "schladming"],
+  [/Golling|Hallein|Dürrnberg|Keltenblitz|Abtenau|Sankt Martin|Bluntau|Salina/i, "tennengau"],
+  [/Salzburg|Hohensalzburg|Haus der Natur|Mozart|Sound of Music|Maria's|Hohenwerfen|Werfen/i, "salzburg"],
+  [/Amadé|Wagrain|Flachau|Grafenberg|Jägersee|Rucki|Geisterberg|Minigolf|Keltendorf|Lucky Flitzer|Liechtenstein|Panoramabahn|Snow Space|Gastein|Großarl|Grießenkar|Filzmoos|Alpendorf|St\. Johann/i, "pongau"],
+  [/Sinne|Asitz|Leogang|Alpaka|Ferleiten|Zell am See|Wildkogel|Sigmund|Kaprun|Glockner|Maisi|Biberg|Kniepass|Blausee|Paraglid|Kitzstein|Saalfelden/i, "pinzgau"],
+  [/Königssee|Berchtesgaden/i, "germany"],
+  [/Stuibenfall|Aqua Dome|Timoks|Winklersee|Pyramidenkogel|Serfaus/i, "far"],
+];
+
+/* region column -> area, checked before the loose distance guess */
+const REGION_AREA = [
+  [/זלצקמרגוט|אוברטראון|גרונדלזה|הלשטט/, "base"],
+  [/שאלדמינג|גרובמינג|אנס|פלכאו.*שאלדמינג/, "schladming"],
+  [/טננגאו|Hallein|Dürrnberg|אבטנאו/i, "tennengau"],
+  [/זלצבורג|Werfen/i, "salzburg"],
+  [/פונגאו|Wagrain|Flachau|Altenmarkt|Kleinarl|גשטיין/i, "pongau"],
+  [/פינצגאו|Kaprun|Saalfelden|לאוגנג|לופר/i, "pinzgau"],
+  [/גרמניה|ברכטסגאדן/, "germany"],
+  [/טירול|אוץ/, "far"],
+];
+
+function areaOf(a) {
+  for (const [re, id] of AREA_RULES) if (re.test(a.name)) return id;
+  const reg = a.region || "";
+  for (const [re, id] of REGION_AREA) if (re.test(reg)) return id;
+  if (a.mins == null) return "far";
+  if (a.mins <= 60) return "base";
+  if (a.mins <= 95) return "pongau";
+  if (a.mins <= 130) return "pinzgau";
+  return "far";
+}
+
+/* inside an area: best first.  more guidebooks + fits both girls + closer. */
+/* eating spots ride along in the same list but belong at the foot of an area */
+const isFood = (a) => /מסעד|פיצ|קפה|בית קפה/.test(a.cat || "");
+
+/* Two things Tal singled out: lake cycling and the summer coasters.
+   They were buried among 105 rows, so they get a badge and a filter. */
+const HIGHLIGHTS = [
+  { id: "bike",    label: "\uD83D\uDEB4 אופניים", short: "\uD83D\uDEB4",
+    test: (a) => /אופניים|Radweg|Bicycle|Ostufer|Koppental|Chorinsky/i.test(a.name + " " + a.cat) },
+  { id: "coaster", label: "\uD83D\uDEF7 מזחלות הרים", short: "\uD83D\uDEF7",
+    test: (a) => /Coaster|Flitzer|Rodelbahn|מגלש/i.test(a.name + " " + a.cat) },
+];
+const highlightOf = (a) => (HIGHLIGHTS.find((h) => h.test(a)) || null);
+
+const FIT_RANK = { good: 0, partial: 1, no: 2 };
+function areaSort(a, b) {
+  return (FIT_RANK[a.fit] ?? 1) - (FIT_RANK[b.fit] ?? 1)
+      || (b.sources || 1) - (a.sources || 1)
+      || (a.mins ?? 999) - (b.mins ?? 999)
+      || a.name.localeCompare(b.name, "he");
+}
+
+const AUT_BUCKETS = [
+  { max: 15, time: "עד 15 דק'", title: "על סף הבית", c: "var(--grundlsee)" },
+  { max: 45, time: "15–45 דק'", title: "קפיצה קצרה", c: "var(--grundlsee)" },
+  { max: 60, time: "עד שעה", title: "הלוך-חזור בנוח", c: "var(--obertraun)" },
+  { max: 90, time: "שעה וחצי", title: "יציאה עד 09:30", c: "var(--obertraun)" },
+  { max: 120, time: "שעתיים", title: "שנת צהריים ברכב", c: "var(--balaton)" },
+  { max: Infinity, time: "שעתיים+", title: "יום שלם על הכביש", c: "var(--crit)" },
+];
+const BUD_BUCKETS = [
+  { max: 10, time: "עד 10 דק'", title: "מרחק הליכה מהמלון", c: "var(--budapest)" },
+  { max: 25, time: "10–25 דק'", title: "הליכה נוחה עם העגלה", c: "var(--budapest)" },
+  { max: Infinity, time: "25–50 דק'", title: "עדיף מטרו M1/M2", c: "var(--obertraun)" },
+  { max: null, time: "מטרו / מונית", title: "לא במרחק הליכה", c: "var(--home)" },
+];
+const bucketsFor = (k) => (k === "austria" ? AUT_BUCKETS : BUD_BUCKETS);
+const bucketOf = (a, bs) => a.mins == null
+  ? bs.findIndex((b) => b.max === null)
+  : bs.findIndex((b) => b.max !== null && a.mins <= b.max);
+
+/* Render items into `host` grouped either by area (Tal) or by drive bucket. */
+function renderGrouped(host, items, kind, cardFn, headEl) {
+  if (GROUP_BY === "area" && kind === "austria") {
+    const byArea = new Map();
+    items.forEach((a) => {
+      const id = areaOf(a);
+      if (!byArea.has(id)) byArea.set(id, []);
+      byArea.get(id).push(a);
+    });
+    [...byArea.entries()]
+      .sort((x, y) => AREA_IX.get(x[0]) - AREA_IX.get(y[0]))
+      .forEach(([id, list]) => {
+        const ar = AREAS[AREA_IX.get(id)];
+        const seeList = list.filter((a) => !isFood(a)).sort(areaSort);
+        const eatList = list.filter(isFood).sort(areaSort);
+        const sec = headEl ? el("section", "bucket") : host;
+        const h = el("div", headEl ? "bhead" : "poolgroup");
+        const t = el("span", "btime", ar.drive);
+        t.style.setProperty("--bc", ar.c);
+        h.appendChild(t);
+        h.appendChild(el("span", "btitle", ar.name));
+        h.appendChild(el("span", "bcount", String(seeList.length)));
+        sec.appendChild(h);
+        if (headEl) {
+          const sub = el("div", "asub", ar.blurb);
+          sub.style.cssText = "font-size:12px;color:var(--ink-3);margin:-2px 0 8px;padding-inline-start:2px";
+          sec.appendChild(sub);
+          if (seeList.length) {
+            const cards = el("div", "cards");
+            seeList.forEach((a) => cards.appendChild(cardFn(a, kind)));
+            sec.appendChild(cards);
+          }
+          if (eatList.length) {
+            /* the point of grouping by area: you finish the day here, so eat here */
+            const eh = el("div", "eathead");
+            eh.appendChild(el("span", null, "\uD83C\uDF5D לאכול באזור"));
+            eh.appendChild(el("span", "bcount", String(eatList.length)));
+            sec.appendChild(eh);
+            const ec = el("div", "cards");
+            eatList.forEach((a) => ec.appendChild(cardFn(a, kind)));
+            sec.appendChild(ec);
+          }
+          host.appendChild(sec);
+        } else {
+          seeList.forEach((a) => host.appendChild(cardFn(a, kind)));
+          if (eatList.length) {
+            const eh = el("div", "poolgroup");
+            eh.appendChild(el("span", "btitle", "\uD83C\uDF5D לאכול באזור"));
+            eh.appendChild(el("span", "bcount", String(eatList.length)));
+            host.appendChild(eh);
+            eatList.forEach((a) => host.appendChild(cardFn(a, kind)));
+          }
+        }
+      });
+    return;
+  }
+  const bs = bucketsFor(kind);
+  bs.forEach((bk, bi) => {
+    const inB = items.filter((a) => bucketOf(a, bs) === bi);
+    if (!inB.length) return;
+    inB.sort((a, b) => (b.sources || 1) - (a.sources || 1) || (a.mins || 0) - (b.mins || 0));
+    const sec = headEl ? el("section", "bucket") : host;
+    const h = el("div", headEl ? "bhead" : "poolgroup");
+    const t = el("span", "btime", bk.time);
+    t.style.setProperty("--bc", bk.c);
+    h.appendChild(t);
+    h.appendChild(el("span", "btitle", bk.title));
+    h.appendChild(el("span", "bcount", String(inB.length)));
+    sec.appendChild(h);
+    if (headEl) {
+      const cards = el("div", "cards");
+      inB.forEach((a) => cards.appendChild(cardFn(a, kind)));
+      sec.appendChild(cards);
+      host.appendChild(sec);
+    } else {
+      inB.forEach((a) => host.appendChild(cardFn(a, kind)));
+    }
+  });
+}
+
+/* Area chips: the name people actually think in, drive time underneath.
+   Only offers areas that still have something in them after the other
+   filters, so you can't pick your way into an empty list. */
+function areaFilterLine(state, present, onChange) {
+  const line = el("div", "fline scroll");
+  line.appendChild(el("span", "flab", "אזור"));
+  const seg = el("div", "seg areaseg");
+
+  const mk = (id, label, sub, count) => {
+    const b = el("button");
+    /* name and count share the top line; the drive time sits under them */
+    const top = el("span", "arow");
+    top.appendChild(el("span", "aname", label));
+    if (count != null) top.appendChild(el("span", "acount", String(count)));
+    b.appendChild(top);
+    b.appendChild(el("span", "lsub", sub));
+    b.setAttribute("aria-pressed", state.area === id ? "true" : "false");
+    b.setAttribute("aria-label",
+      count != null ? `${label} — ${sub}, ${count} מקומות` : `${label} — ${sub}`);
+    b.addEventListener("click", () => { state.area = state.area === id ? null : id; onChange(); });
+    seg.appendChild(b);
+  };
+
+  mk(null, "הכל", "כל האזורים", present.total);
+  AREAS.forEach((ar) => {
+    const n = present.byArea[ar.id] || 0;
+    if (!n) return;
+    mk(ar.id, ar.name.split(" — ")[0], ar.drive, n);
+  });
+  line.appendChild(seg);
+  return line;
+}
+
+/* counts per area for whatever survived the non-area filters */
+function areaPresence(items) {
+  const byArea = {};
+  items.forEach((a) => { const id = areaOf(a); byArea[id] = (byArea[id] || 0) + 1; });
+  return { byArea, total: items.length };
+}
+
+/* A complete partition of the bank — order matters, first match wins, and
+   "אטרקציות" is deliberately last so it catches whatever is left. */
+const TYPES = [
+  { id: "bike",   label: "\uD83D\uDEB4 אופניים",
+    test: (a) => /אופניים|Radweg|Bicycle|Ostufer|Koppental|Chorinsky/i.test(a.name + " " + a.cat) },
+  { id: "coaster", label: "\uD83D\uDEF7 מזחלות הרים",
+    test: (a) => /Coaster|Flitzer|Rodelbahn|מגלש/i.test(a.name + " " + a.cat) },
+  { id: "food",    label: "\uD83C\uDF5D מסעדות",
+    test: (a) => /מסעד|פיצ|קפה/.test(a.cat || "") },
+  { id: "play",    label: "\uD83C\uDFA0 גני שעשועים",
+    test: (a) => /פארקי שעשועים|פארקי משחקים/.test(a.cat || "") },
+  { id: "sights",  label: "\u2B50 אטרקציות", test: () => true },
+];
+const typeOf = (a) => (TYPES.find((t) => t.test(a)) || TYPES[TYPES.length - 1]).id;
+
+/* the full row: הכל + one chip per type, each with a live count */
+function typeLine(state, src, onChange) {
+  const line = el("div", "fline scroll");
+  line.appendChild(el("span", "flab", "סוג"));
+  const seg = el("div", "seg");
+
+  const mk = (id, label, n) => {
+    const b = el("button");
+    b.appendChild(el("span", null, label));
+    b.appendChild(el("span", "acount", String(n)));
+    b.setAttribute("aria-pressed", state.type === id ? "true" : "false");
+    b.setAttribute("aria-label", `${label} — ${n} מקומות`);
+    b.addEventListener("click", () => { state.type = state.type === id ? null : id; onChange(); });
+    seg.appendChild(b);
+  };
+
+  mk(null, "הכל", src.length);
+  TYPES.forEach((t) => {
+    const n = src.filter((a) => typeOf(a) === t.id).length;
+    if (n) mk(t.id, t.label, n);
+  });
+  line.appendChild(seg);
+  return line;
+}
+
+/* one-tap "just show me the bikes / just the coasters" */
+function highlightLine(state, src, onChange) {
+  const line = el("div", "fline");
+  line.appendChild(el("span", "flab", "בלט"));
+  const seg = el("div", "seg");
+  HIGHLIGHTS.forEach((h) => {
+    const n = src.filter(h.test).length;
+    if (!n) return;
+    const b = el("button", null, `${h.label} ${n}`);
+    b.setAttribute("aria-pressed", state.hl === h.id ? "true" : "false");
+    b.addEventListener("click", () => { state.hl = state.hl === h.id ? null : h.id; onChange(); });
+    seg.appendChild(b);
+  });
+  line.appendChild(seg);
+  return line;
+}
+
+/* the two-button toggle that switches the grouping */
+function groupToggle(onChange) {
+  const line = el("div", "fline");
+  line.appendChild(el("span", "flab", "לקבץ לפי"));
+  const seg = el("div", "seg");
+  [["area", "אזור"], ["drive", "זמן נסיעה"]].forEach(([v, t]) => {
+    const b = el("button", null, t);
+    b.setAttribute("aria-pressed", GROUP_BY === v ? "true" : "false");
+    b.addEventListener("click", () => { setGroupBy(v); onChange(); });
+    seg.appendChild(b);
+  });
+  line.appendChild(seg);
+  return line;
+}
+
+
+/* ================= move dialog (the keyboard / no-drag path) ================= */
+let moveCtx = null, moveLane = "plan";
+function openMove(item, from) {
+  moveCtx = { item, from };
+  moveLane = from ? from.lane : "plan";
+  document.getElementById("move-title").textContent = item.name;
+  document.getElementById("move-sub").textContent = from
+    ? `כרגע ב-${from.date} · ${from.lane === "plan" ? "התוכנית" : "חלופות"}` : "בחר יום ומסלול";
+  const lanePick = document.getElementById("move-lane");
+  lanePick.innerHTML = "";
+  const seg = el("div", "seg");
+  [["plan", "לתוכנית"], ["alt", "לחלופות"]].forEach(([v, t]) => {
+    const b = el("button", null, t);
+    b.setAttribute("aria-pressed", moveLane === v ? "true" : "false");
+    b.addEventListener("click", () => {
+      moveLane = v;
+      [...seg.children].forEach((c) => c.setAttribute("aria-pressed", c === b ? "true" : "false"));
+    });
+    seg.appendChild(b);
+  });
+  lanePick.appendChild(seg);
+
+  const host = document.getElementById("move-days");
+  host.innerHTML = "";
+  DATA.days.forEach((d) => {
+    const b = el("button");
+    b.style.setProperty("--rc", `var(--${d.region})`);
+    b.appendChild(el("b", null, `${d.date} · ${d.dow}`));
+    const cur = planOf(d).plan[0];
+    b.appendChild(el("span", null, cur ? cur.name : "— ריק —"));
+    b.addEventListener("click", () => {
+      /* moveItemTo carries the duplicate guard the old drag path had */
+      const ok = moveItemTo(moveCtx.item, moveCtx.from,
+        { date: d.date, lane: moveLane, idx: planOf(d)[moveLane].length });
+      document.getElementById("dlg-move").close();
+      if (!ok) return;
+      show("board");
+      renderBoard();
+    });
+    host.appendChild(b);
+  });
+  document.getElementById("dlg-move").showModal();
+}
+
+/* ================= itinerary detail ================= */
+function editable(day, field, node) {
+  node.classList.add("ed");
+  if (edited(day, field)) node.classList.add("dirty");
+  node.tabIndex = 0;
+  node.setAttribute("role", "textbox");
+  const open = () => {
+    const ta = el("textarea", "edit");
+    ta.value = val(day, field) || "";
+    ta.rows = Math.max(2, Math.ceil(ta.value.length / 40));
+    ta.setAttribute("aria-label", "עריכת שדה");
+    node.replaceWith(ta);
+    ta.focus();
+    ta.setSelectionRange(ta.value.length, ta.value.length);
+    const commit = () => {
+      setVal(day, field, ta.value);
+      const fresh = el(node.tagName.toLowerCase(), node.className.replace(/\s*dirty/, ""));
+      fresh.textContent = val(day, field);
+      ta.replaceWith(fresh);
+      editable(day, field, fresh);
+    };
+    ta.addEventListener("blur", commit, { once: true });
+    ta.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") { ta.value = val(day, field) || ""; ta.blur(); }
+      if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) ta.blur();
+    });
+  };
+  node.addEventListener("click", open);
+  node.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); }
+  });
+  return node;
+}
+function kvRow(day, field, label) {
+  const r = el("div", "row");
+  r.appendChild(el("span", "k", label));
+  const v = editable(day, field, el("span", "v"));
+  v.textContent = val(day, field);
+  r.appendChild(v);
+  return r;
+}
+const seedTasks = (day) => (val(day, "shop") || "").split(/\s+·\s+/).map((s) => s.trim()).filter(Boolean);
+const allTasks = (day) => seedTasks(day).concat(S.extraTasks[day.date] || []);
+const taskLabel = (n) => (n === 1 ? "☑ משימה אחת פתוחה" : `☑ ${n} משימות פתוחות`);
+
+function dayCard(day, i) {
+  const wrap = el("details", "day");
+  wrap.style.setProperty("--rc", `var(--${day.region})`);
+  if (isToday(day)) { wrap.classList.add("today"); wrap.open = true; }
+  else if (isPast(day)) wrap.classList.add("past");
+
+  const head = el("summary", "dhead");
+  head.appendChild(el("span", "dnum", String(i + 1)));
+  const dd = el("span", "ddate");
+  dd.appendChild(el("b", null, day.date));
+  dd.appendChild(el("span", null, day.dow));
+  head.appendChild(dd);
+  const main = el("span", "dmain");
+  const p = planOf(day);
+  main.appendChild(el("span", "dpick", p.plan.map((x) => x.name).join(" · ") || "— לא נקבע —"));
+  const meta = el("span", "dmeta");
+  meta.appendChild(el("span", "rg", REGION_LABEL[day.region]));
+  if (legOf(day) === "friends") meta.appendChild(el("span", "withpal", "👥"));
+  if (val(day, "lodging")) meta.appendChild(el("span", null, "🛏 " + val(day, "lodging")));
+  const open = allTasks(day).filter((_, k) => !S.checks[day.date + "::" + k]).length;
+  if (open) meta.appendChild(el("span", "tasktag", taskLabel(open)));
+  main.appendChild(meta);
+  head.appendChild(main);
+  head.appendChild(el("span", "chev", "⌄"));
+  wrap.appendChild(head);
+
+  const body = el("div", "dbody");
+
+  const ps = el("div", "sect");
+  ps.appendChild(el("div", "lab", "התוכנית"));
+  if (p.plan.length) {
+    const rows = el("div", "rows");
+    p.plan.forEach((it) => {
+      const r = el("div", "row");
+      r.appendChild(el("span", "k", "⭐"));
+      const v = el("span", "v");
+      v.appendChild(el("b", null, it.name));
+      if (it.note) v.appendChild(el("div", "cnote", it.note));
+      r.appendChild(v);
+      rows.appendChild(r);
+    });
+    ps.appendChild(rows);
+  } else ps.appendChild(el("div", "dropempty", "עוד לא נקבע — הוסף בלוח"));
+  if (p.alt.length) {
+    const rows = el("div", "rows");
+    p.alt.forEach((it) => {
+      const r = el("div", "row");
+      r.appendChild(el("span", "k", "חלופה"));
+      r.appendChild(el("span", "v", it.name));
+      rows.appendChild(r);
+    });
+    ps.appendChild(rows);
+  }
+  const toBoard = el("button", "tiny", "ערוך בלוח");
+  toBoard.addEventListener("click", () => { show("board"); });
+  ps.appendChild(el("div", "dact")).appendChild(toBoard);
+  body.appendChild(ps);
+
+  const rainy = el("div", "sect");
+  rainy.appendChild(el("div", "lab", "מזג אוויר ואחה״צ"));
+  const rr = el("div", "rows");
+  [["rain", "☔ יום גשום"], ["afternoon", "🌞 אחה״צ"]].forEach(([f, k]) => {
+    if (val(day, f) || edited(day, f)) rr.appendChild(kvRow(day, f, k));
+  });
+  if (rr.children.length) { rainy.appendChild(rr); body.appendChild(rainy); }
+
+  const meals = el("div", "sect");
+  meals.appendChild(el("div", "lab", "אוכל"));
+  const mr = el("div", "rows");
+  [["breakfast", "🍳 בוקר"], ["lunch", "🥪 צהריים"], ["dinner", "🍽️ ערב"], ["pension", "פנסיון"]]
+    .forEach(([f, k]) => { if (val(day, f)) mr.appendChild(kvRow(day, f, k)); });
+  meals.appendChild(mr);
+  body.appendChild(meals);
+
+  const logi = el("div", "sect");
+  logi.appendChild(el("div", "lab", "לוגיסטיקה"));
+  const lr = el("div", "rows");
+  [["lodging", "🛏 לינה"], ["logi", "צ'ק-אין"], ["must", "יציאה"], ["flight", "✈️ טיסה"]]
+    .forEach(([f, k]) => { if (val(day, f)) lr.appendChild(kvRow(day, f, k)); });
+  if (day.lodgingCarried) {
+    const r = el("div", "row");
+    r.appendChild(el("span", "k", "⚠️"));
+    const v = el("span", "v", "הלינה הושלמה מהיום הקודם — הגיליון השאיר את התא ריק. כדאי לאמת ולתקן.");
+    v.style.color = "var(--ink-3)";
+    v.style.fontSize = "13px";
+    r.appendChild(v);
+    lr.appendChild(r);
+  }
+  logi.appendChild(lr);
+  body.appendChild(logi);
+
+  const ts = el("div", "sect");
+  ts.appendChild(el("div", "lab", "משימות ליום"));
+  if (/⚠️/.test(val(day, "shop") || "")) {
+    const w = el("div", "warnbox");
+    w.appendChild(el("span", null, "⚠️"));
+    w.appendChild(el("span", null, (val(day, "shop") || "").replace(/⚠️/g, "").trim()));
+    ts.appendChild(w);
+  }
+  const list = el("div", "checks");
+  const tasks = allTasks(day);
+  tasks.forEach((t, k) => {
+    const id = day.date + "::" + k;
+    const lab = el("label", "chk" + (S.checks[id] ? " on" : ""));
+    const box = el("input");
+    box.type = "checkbox"; box.checked = !!S.checks[id];
+    box.addEventListener("change", () => {
+      if (box.checked) S.checks[id] = true; else delete S.checks[id];
+      save(); lab.classList.toggle("on", box.checked);
+      const o = allTasks(day).filter((_, j) => !S.checks[day.date + "::" + j]).length;
+      const badge = head.querySelector(".tasktag");
+      if (o && badge) badge.textContent = taskLabel(o);
+      else if (o) head.querySelector(".dmeta").appendChild(el("span", "tasktag", taskLabel(o)));
+      else if (badge) badge.remove();
+    });
+    lab.appendChild(box);
+    lab.appendChild(el("span", null, t.replace(/⚠️/g, "").trim()));
+    if (k >= seedTasks(day).length) {
+      const x = el("button", "x", "✕");
+      x.setAttribute("aria-label", `מחק את המשימה ${t}`);
+      x.addEventListener("click", (e) => {
+        e.preventDefault();
+        S.extraTasks[day.date].splice(k - seedTasks(day).length, 1);
+        delete S.checks[id]; save(); renderDays();
+      });
+      lab.appendChild(x);
+    }
+    list.appendChild(lab);
+  });
+  ts.appendChild(list);
+  const add = el("form", "addrow");
+  const inp = el("input");
+  inp.placeholder = "הוסף משימה…";
+  inp.setAttribute("aria-label", `משימה חדשה ל-${day.date}`);
+  add.appendChild(inp);
+  add.appendChild(el("button", "tiny", "הוסף"));
+  add.addEventListener("submit", (e) => {
+    e.preventDefault();
+    if (!inp.value.trim()) return;
+    (S.extraTasks[day.date] = S.extraTasks[day.date] || []).push(inp.value.trim());
+    save(); renderDays();
+  });
+  ts.appendChild(add);
+  body.appendChild(ts);
+
+  if (S.edits[day.date]) {
+    const rst = el("button", "tiny danger", "שחזר את היום מהגיליון");
+    rst.addEventListener("click", () => {
+      delete S.edits[day.date]; delete S.plan[day.date];
+      save(); renderDays(); renderBoard(); toast("היום שוחזר למקור");
+    });
+    body.appendChild(el("div", "dact")).appendChild(rst);
+  }
+
+  wrap.appendChild(body);
+  return wrap;
+}
+
+function renderDays() {
+  const host = document.getElementById("view-days");
+  const openDates = new Set([...host.querySelectorAll("details[open]")]
+    .map((d) => d.querySelector(".ddate b").textContent));
+  host.innerHTML = "";
+  const stack = el("div", "stack");
+  const days = legDays();
+  days.forEach((d, i) => {
+    if (LEG === "all" && i > 0 && legOf(d) === "friends" && legOf(days[i - 1]) === "us") {
+      stack.appendChild(legDivider());
+    }
+    const c = dayCard(d, DATA.days.indexOf(d));
+    if (openDates.has(d.date)) c.open = true;
+    stack.appendChild(c);
+  });
+  host.appendChild(stack);
+}
+
+/* ================= library tabs ================= */
+const LF = { maxDrive: null, area: null, type: null, fit: "all", cat: null, q: "", favOnly: false };
+
+function libCard(a, kind) {
+  const c = el("div", "card" + (S.favs[a.name] ? " fav" : ""));
+  const top = el("div", "ctop");
+  top.appendChild(el("span", "cname", a.name));
+  const star = el("button", "starbtn hit", "★");
+  star.setAttribute("aria-pressed", S.favs[a.name] ? "true" : "false");
+  star.setAttribute("aria-label", `סמן את ${a.name} כמועדף`);
+  star.addEventListener("click", () => {
+    if (S.favs[a.name]) delete S.favs[a.name]; else S.favs[a.name] = true;
+    save(); renderLibrary(kind);
+  });
+  top.appendChild(star);
+  c.appendChild(top);
+
+  if (a.url) {
+    const lk = el("a", "sitelink hit", "\uD83D\uDD17");
+    lk.href = a.url; lk.target = "_blank"; lk.rel = "noopener";
+    lk.title = "האתר הרשמי";
+    lk.setAttribute("aria-label", `האתר הרשמי של ${a.name}`);
+    lk.addEventListener("pointerdown", (ev) => ev.stopPropagation());
+    top.insertBefore(lk, star);
+  }
+
+  const hl = kind === "austria" ? highlightOf(a) : null;
+  if (hl) c.classList.add("hl", "hl-" + hl.id);
+
+  const meta = el("div", "cmeta");
+  if (hl) meta.appendChild(el("span", "pill hlpill", hl.label));
+  if (kind === "austria") {
+    meta.appendChild(el("span", "drive", a.dist));
+    meta.appendChild(el("span", null, a.region));
+    meta.appendChild(el("span", `pill ${a.fit}`, FIT_LABEL[a.fit]));
+    if (a.sources > 1) {
+      const r = el("span", "recs", "●".repeat(Math.min(a.sources, 5)));
+      r.title = `הומלץ ב-${a.sources} מקורות`;
+      meta.appendChild(r);
+    }
+  } else {
+    meta.appendChild(el("span", "drive", a.mins == null ? "נסיעה" : `${a.mins} דק' הליכה`));
+    meta.appendChild(el("span", "pill cat", a.cat));
+    if (a.fitText) {
+      const cls = a.fitText.startsWith("מצוין") ? "good" : a.fitText === "חלקי" ? "partial" : "cat";
+      meta.appendChild(el("span", "pill " + cls, a.fitText));
+    }
+  }
+  c.appendChild(meta);
+  if (kind === "austria" && a.fitText && !/^[🟢🟡🔴]/.test(a.fitText)) c.appendChild(el("div", "cnote", a.fitText));
+  if (kind === "budapest" && a.mins == null) c.appendChild(el("div", "cnote", a.where));
+  if (a.note && a.note !== "-") c.appendChild(el("div", "cnote", a.note));
+
+  const act = el("div", "cact");
+  const add = el("button", "tiny solid", "שבץ ליום");
+  add.addEventListener("click", () => openMove(itemFromAttraction(a, kind), null));
+  act.appendChild(add);
+  const map = el("a", "tiny", "מפות");
+  map.href = "https://www.google.com/maps/search/?api=1&query="
+    + encodeURIComponent(a.name + (kind === "austria" ? " Austria" : " Budapest"));
+  map.target = "_blank"; map.rel = "noopener";
+  act.appendChild(map);
+  c.appendChild(act);
+
+  c.setAttribute("role", "button");
+  c.tabIndex = 0;
+  c.addEventListener("click", (ev) => {
+    if (ev.target.closest("button, a")) return;   // star / site link keep their own job
+    openAttraction(a, kind);
+  });
+  c.addEventListener("keydown", (ev) => {
+    if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); openAttraction(a, kind); }
+  });
+  return c;
+}
+
+function renderLibrary(kind) {
+  const host = document.getElementById("view-" + kind);
+  const src = kind === "austria" ? DATA.austria : DATA.budapest;
+  const bs = bucketsFor(kind);
+  host.innerHTML = "";
+
+  const f = el("div", "filters");
+  f.style.cssText = "display:flex;flex-direction:column;gap:9px;padding:14px 0 12px;border-bottom:1px solid var(--line)";
+  const search = el("input", "search");
+  search.type = "search";
+  search.placeholder = `חיפוש בין ${src.length} האטרקציות…`;
+  search.value = LF.q;
+  search.setAttribute("aria-label", "חיפוש");
+  search.addEventListener("input", () => { LF.q = search.value; drawList(); });
+  f.appendChild(search);
+
+  if (kind === "austria") {
+    f.appendChild(groupToggle(() => renderLibrary(kind)));
+    f.appendChild(typeLine(LF, src, () => renderLibrary(kind)));
+    if (GROUP_BY === "area") {
+      const keep = LF.area; LF.area = null;
+      const present = areaPresence(src.filter((a) => {
+        if (LF.favOnly && !S.favs[a.name]) return false;
+        if (LF.fit === "good" && a.fit !== "good") return false;
+        if (LF.fit === "ok" && a.fit === "no") return false;
+        if (LF.cat && a.cat !== LF.cat) return false;
+        return true;
+      }));
+      LF.area = keep;
+      f.appendChild(areaFilterLine(LF, present, () => renderLibrary(kind)));
+    } else {
+      const l1 = el("div", "fline");
+      l1.appendChild(el("span", "flab", "עד כמה נוסעים"));
+      const seg = el("div", "seg");
+      [[null, "הכל"], [15, "15 דק'"], [45, "45 דק'"], [60, "שעה"], [90, "שעה וחצי"], [120, "שעתיים"]]
+        .forEach(([v, t]) => {
+          const b = el("button", null, t);
+          b.setAttribute("aria-pressed", LF.maxDrive === v ? "true" : "false");
+          b.addEventListener("click", () => { LF.maxDrive = v; renderLibrary(kind); });
+          seg.appendChild(b);
+        });
+      l1.appendChild(seg);
+      f.appendChild(l1);
+    }
+
+    const l2 = el("div", "fline");
+    l2.appendChild(el("span", "flab", "התאמה"));
+    const seg2 = el("div", "seg");
+    [["all", "הכל"], ["ok", "בלי האדומים"], ["good", "מתאים לשתיהן"]].forEach(([v, t]) => {
+      const b = el("button", null, t);
+      b.setAttribute("aria-pressed", LF.fit === v ? "true" : "false");
+      b.addEventListener("click", () => { LF.fit = v; renderLibrary(kind); });
+      seg2.appendChild(b);
+    });
+    l2.appendChild(seg2);
+    const fav = el("button", "chip", "★ מועדפים");
+    fav.setAttribute("aria-pressed", LF.favOnly ? "true" : "false");
+    fav.addEventListener("click", () => { LF.favOnly = !LF.favOnly; renderLibrary(kind); });
+    l2.appendChild(fav);
+    f.appendChild(l2);
+  }
+
+  const l3 = el("div", "fline scroll");
+  const all = el("button", "chip", "כל הקטגוריות");
+  all.setAttribute("aria-pressed", LF.cat === null ? "true" : "false");
+  all.addEventListener("click", () => { LF.cat = null; renderLibrary(kind); });
+  l3.appendChild(all);
+  [...new Set(src.map((a) => a.cat))].forEach((cat) => {
+    const b = el("button", "chip", cat);
+    b.setAttribute("aria-pressed", LF.cat === cat ? "true" : "false");
+    b.addEventListener("click", () => { LF.cat = LF.cat === cat ? null : cat; renderLibrary(kind); });
+    l3.appendChild(b);
+  });
+  f.appendChild(l3);
+  host.appendChild(f);
+
+  const listHost = el("div");
+  listHost.style.paddingBottom = "40px";
+  host.appendChild(listHost);
+
+  function drawList() {
+    const q = LF.q.trim().toLowerCase();
+    const items = src.filter((a) => {
+      if (LF.favOnly && !S.favs[a.name]) return false;
+      if (kind === "austria") {
+        if (LF.type && typeOf(a) !== LF.type) return false;
+        if (GROUP_BY === "area") { if (LF.area && areaOf(a) !== LF.area) return false; }
+        else if (LF.maxDrive && a.mins > LF.maxDrive) return false;
+        if (LF.fit === "good" && a.fit !== "good") return false;
+        if (LF.fit === "ok" && a.fit === "no") return false;
+      }
+      if (LF.cat && a.cat !== LF.cat) return false;
+      if (q && !(a.name + " " + a.note + " " + (a.region || a.where || "")).toLowerCase().includes(q)) return false;
+      return true;
+    });
+    listHost.innerHTML = "";
+    if (!items.length) {
+      listHost.appendChild(el("div", "empty", "אין אטרקציות שעונות על הסינון הזה.\nנסה להרחיב את זמן הנסיעה או לנקות את החיפוש."));
+      return;
+    }
+    renderGrouped(listHost, items, kind, libCard, true);
+  }
+  drawList();
+}
+
+/* ================= attraction sheet ================= */
+/* A tap on a card lands here — on a phone the card itself is too small to
+   carry the note, the fit warning and the actions at once. */
+function openAttraction(a, kind) {
+  const dlg = document.getElementById("dlg-att");
+  document.getElementById("att-name").textContent = a.name;
+
+  const body = document.getElementById("att-body");
+  body.innerHTML = "";
+
+  const row = el("div", "attrow");
+  if (kind === "austria") {
+    row.appendChild(el("span", "drive", a.dist));
+    row.appendChild(el("span", `pill ${a.fit}`, FIT_LABEL[a.fit]));
+    const ar = AREAS[AREA_IX.get(areaOf(a))];
+    if (ar) row.appendChild(el("span", "pill cat", ar.name));
+  } else {
+    row.appendChild(el("span", "drive", a.mins == null ? "נסיעה" : `${a.mins} דק' הליכה`));
+    row.appendChild(el("span", "pill cat", a.cat));
+  }
+  body.appendChild(row);
+
+  if (a.note) body.appendChild(el("div", "attnote", a.note));
+
+  const kv = el("div", "attkv");
+  const add = (k, v) => {
+    if (!v) return;
+    kv.appendChild(el("b", null, k));
+    kv.appendChild(el("span", null, String(v)));
+  };
+  add("קטגוריה", a.cat);
+  add("אזור", a.region || a.where);
+  if (kind === "austria") {
+    add("התאמה", a.fitText);
+    add("המלצות", a.sources > 1 ? `${a.sources} מדריכים` : "מקור אחד");
+  } else add("התאמה", a.fitText);
+  if (kv.children.length) body.appendChild(kv);
+
+  const act = document.getElementById("att-act");
+  act.innerHTML = "";
+  const fav = el("button", null, S.favs[a.name] ? "★ במועדפים" : "☆ למועדפים");
+  fav.addEventListener("click", () => {
+    if (S.favs[a.name]) delete S.favs[a.name]; else S.favs[a.name] = true;
+    save();
+    fav.textContent = S.favs[a.name] ? "★ במועדפים" : "☆ למועדפים";
+    if (view === "austria" || view === "budapest") renderLibrary(view);
+  });
+  act.appendChild(fav);
+
+  if (a.url) {
+    const site = el("button", null, "\uD83D\uDD17 האתר הרשמי");
+    site.addEventListener("click", () => window.open(a.url, "_blank", "noopener"));
+    act.appendChild(site);
+  }
+
+  const toDay = el("button", "primary", "לשבץ ליום");
+  toDay.addEventListener("click", () => {
+    dlg.close();
+    openMove(itemFromAttraction(a, kind), null);
+  });
+  act.appendChild(toDay);
+
+  dlg.showModal();
+}
+
+/* ================= attractions bank ================= */
+/* Same data and grouping as the library tab, but presented as a modal you
+   summon deliberately. Cards here open the detail sheet instead of being
+   drag handles — you can't drop onto a board you can't see. */
+const BF = { source: "austria", area: null, type: null, fit: "ok", q: "", favOnly: false };
+
+function bankItems() {
+  const src = BF.source === "austria" ? DATA.austria : DATA.budapest;
+  const q = BF.q.trim().toLowerCase();
+  return src.filter((a) => {
+    if (BF.favOnly && !S.favs[a.name]) return false;
+    if (BF.source === "austria") {
+      if (BF.type && typeOf(a) !== BF.type) return false;
+      if (BF.area && areaOf(a) !== BF.area) return false;
+      if (BF.fit === "good" && a.fit !== "good") return false;
+      if (BF.fit === "ok" && a.fit === "no") return false;
+    }
+    if (q && !(a.name + " " + a.note + " " + (a.region || a.where || "")).toLowerCase().includes(q)) return false;
+    return true;
+  });
+}
+
+/* a read-only twin of libCard: no drag, tap opens the sheet */
+function bankCard(a, kind) {
+  const c = libCard(a, kind);
+  const clone = c.cloneNode(true);          // drops the drag listener
+  clone.querySelectorAll(".starbtn").forEach((b) => {
+    b.addEventListener("click", (ev) => {
+      ev.stopPropagation();
+      if (S.favs[a.name]) delete S.favs[a.name]; else S.favs[a.name] = true;
+      save(); renderBank();
+    });
+  });
+  clone.querySelectorAll(".sitelink").forEach((l) =>
+    l.addEventListener("click", (ev) => ev.stopPropagation()));
+  clone.setAttribute("role", "button");
+  clone.tabIndex = 0;
+  clone.addEventListener("click", () => openAttraction(a, kind));
+  clone.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openAttraction(a, kind); }
+  });
+  return clone;
+}
+
+function renderBankFilters() {
+  const f = document.getElementById("bank-filters");
+  f.innerHTML = "";
+  const redraw = () => { renderBankFilters(); renderBank(); };
+
+  const search = el("input", "search");
+  search.type = "search";
+  search.placeholder = "חיפוש…";
+  search.value = BF.q;
+  search.setAttribute("aria-label", "חיפוש בבנק האטרקציות");
+  search.addEventListener("input", () => { BF.q = search.value; renderBank(); });
+  f.appendChild(search);
+
+  const l1 = el("div", "fline");
+  const src = el("div", "seg");
+  [["austria", "אוסטריה"], ["budapest", "בודפשט"]].forEach(([v, t]) => {
+    const b = el("button", null, t);
+    b.setAttribute("aria-pressed", BF.source === v ? "true" : "false");
+    b.addEventListener("click", () => { BF.source = v; BF.area = null; BF.type = null; redraw(); });
+    src.appendChild(b);
+  });
+  l1.appendChild(src);
+  const fav = el("button", "chip", "★ מועדפים");
+  fav.setAttribute("aria-pressed", BF.favOnly ? "true" : "false");
+  fav.addEventListener("click", () => { BF.favOnly = !BF.favOnly; redraw(); });
+  l1.appendChild(fav);
+  f.appendChild(l1);
+
+  if (BF.source === "austria") {
+    f.appendChild(typeLine(BF, DATA.austria, redraw));
+    const keep = BF.area; BF.area = null;
+    const present = areaPresence(bankItems());
+    BF.area = keep;
+    f.appendChild(areaFilterLine(BF, present, redraw));
+  }
+}
+
+function renderBank() {
+  const host = document.getElementById("bank-body");
+  const items = bankItems();
+  document.getElementById("bank-sub").textContent =
+    BF.source === "austria"
+      ? `${items.length} מקומות באוסטריה · מקובץ לפי אזור`
+      : `${items.length} מקומות בבודפשט · לפי מרחק הליכה`;
+  host.innerHTML = "";
+  if (!items.length) {
+    host.appendChild(el("div", "empty", "אין תוצאות לסינון הזה.\nנסה לנקות את החיפוש או לבחור אזור אחר."));
+    return;
+  }
+  const wasArea = GROUP_BY;
+  if (BF.source === "austria") GROUP_BY = "area";   // the bank is always area-first
+  renderGrouped(host, items, BF.source, bankCard, true);
+  GROUP_BY = wasArea;
+}
+
+function openBank() {
+  renderBankFilters();
+  renderBank();
+  document.getElementById("dlg-bank").showModal();
+}
+
+/* ================= dialogs ================= */
+document.querySelectorAll("[data-close]").forEach((b) =>
+  b.addEventListener("click", () => b.closest("dialog").close()));
+/* A modal <dialog> gets the click when you hit its backdrop, but it does not
+   close on its own. Compare against the content box so a click on the sheet
+   itself never counts as "outside". */
+document.querySelectorAll("dialog").forEach((dlg) => {
+  dlg.addEventListener("click", (e) => {
+    if (e.target !== dlg) return;              // click landed on the content
+    const box = dlg.getBoundingClientRect();
+    const inside =
+      e.clientY >= box.top && e.clientY <= box.bottom &&
+      e.clientX >= box.left && e.clientX <= box.right;
+    if (!inside) dlg.close();
+  });
+});
+
+/* Header button: open the drawer straight onto the Austria bank.
+   It was only reachable by noticing the small handle at the bottom. */
+document.getElementById("btn-bank").addEventListener("click", openBank);
+
+document.getElementById("btn-info").addEventListener("click", () => {
+  const b = document.getElementById("info-body");
+  b.innerHTML = "";
+  const w = el("div", "warnbox");
+  w.appendChild(el("span", null, "⚠️"));
+  w.appendChild(el("span", null, DATA.allergies.join(" · ")));
+  b.appendChild(w);
+  b.appendChild(el("div", "lab", "לומר במסעדה"));
+  const kv = el("div", "kv");
+  [["בוטנים", "Erdnuss · földimogyoró"],
+   ["אלרגיה", "Allergie · allergia"],
+   ["בלי בצל", "ohne Zwiebel · hagyma nélkül"],
+   ["עשוי היטב", "gut durch · jól átsütve"]].forEach(([k, v]) => {
+    const r = el("div");
+    r.appendChild(el("b", null, k));
+    r.appendChild(el("span", null, v));
+    kv.appendChild(r);
+  });
+  b.appendChild(kv);
+  b.appendChild(el("div", "lab", "ציוד שלא נשכח"));
+  const list = el("div", "checks");
+  DATA.carry.forEach((t, k) => {
+    const id = "carry::" + k;
+    const lab = el("label", "chk" + (S.checks[id] ? " on" : ""));
+    const box = el("input");
+    box.type = "checkbox"; box.checked = !!S.checks[id];
+    box.addEventListener("change", () => {
+      if (box.checked) S.checks[id] = true; else delete S.checks[id];
+      save(); lab.classList.toggle("on", box.checked);
+    });
+    lab.appendChild(box);
+    lab.appendChild(el("span", null, t));
+    list.appendChild(lab);
+  });
+  b.appendChild(list);
+  b.appendChild(el("p", "note", "זמני הנסיעה של אטרקציות אוסטריה נמדדים מהבסיס באוברטראון. בימי בלטון ובודפשט הם לא רלוונטיים."));
+  document.getElementById("dlg-info").showModal();
+});
+
+if (!STORE.persistent) {
+  window.addEventListener("DOMContentLoaded", () => {
+    const b = document.getElementById("btn-sync");
+    if (b) b.textContent = "תצוגה בלבד";
+  });
+}
+document.getElementById("btn-sync").addEventListener("click", () => {
+  document.getElementById("sync-ta").value = JSON.stringify(S);
+  document.getElementById("dlg-sync").showModal();
+});
+document.getElementById("sync-copy").addEventListener("click", async () => {
+  const ta = document.getElementById("sync-ta");
+  try { await navigator.clipboard.writeText(ta.value); toast("הקוד הועתק — שלח בוואטסאפ"); }
+  catch (e) { ta.select(); toast("הקוד מסומן — העתק ידנית"); }
+});
+document.getElementById("sync-friendlink").addEventListener("click", async () => {
+  const link = location.href.split("#")[0] + "#board/friends";
+  try { await navigator.clipboard.writeText(link); toast("הקישור הועתק"); }
+  catch (e) { toast("העתק מכאן: " + link); }
+});
+document.getElementById("sync-load").addEventListener("click", () => {
+  try {
+    const next = JSON.parse(document.getElementById("sync-ta").value);
+    if (!next || typeof next !== "object" || !("edits" in next)) throw new Error("shape");
+    S = Object.assign(blank(), next);
+    save(); renderBoard(); renderDays();
+    document.getElementById("dlg-sync").close();
+    toast("הלוח נטען");
+  } catch (e) { toast("הקוד לא תקין — בקש להעתיק אותו שוב במלואו"); }
+});
+document.getElementById("sync-file").addEventListener("click", async () => {
+  if (!window.claude || !window.claude.downloads) { toast("שמירת קובץ לא זמינה כאן"); return; }
+  try {
+    await window.claude.downloads.save({ filename: "austria-trip-plan.json", data: JSON.stringify(S, null, 1) });
+    toast("הגיבוי נשמר");
+  } catch (e) { toast("השמירה בוטלה"); }
+});
+document.getElementById("sync-reset").addEventListener("click", () => {
+  if (!confirm("לאפס את כל השינויים ולחזור לגיליון המקורי? אי אפשר לבטל.")) return;
+  S = blank(); save(); renderBoard(); renderDays();
+  document.getElementById("dlg-sync").close();
+  toast("הכל אופס");
+});
+
+/* ================= views ================= */
+const VIEWS = ["board", "days", "austria", "budapest"];
+let current = "";
+/* the hash is "#view" or "#view/leg" so a link can open straight on a segment */
+const hashFor = () => "#" + current + (LEG === DEFAULT_LEG ? "" : "/" + LEG);
+/* Sandboxed frames refuse replaceState. Deep links are a nicety, navigation
+   is not — so a refusal here must never escape and stop the render. */
+let canSyncHash = true;
+function syncHash() {
+  if (!canSyncHash || location.hash === hashFor()) return;
+  try {
+    history.replaceState(null, "", hashFor());
+  } catch (e) {
+    canSyncHash = false;   // sandboxed: stop trying, keep the app working
+  }
+}
+function show(view, fromHash) {
+  if (!VIEWS.includes(view)) view = "board";
+  if (view !== current) { LF.cat = null; LF.q = ""; }
+  current = view;
+  document.querySelectorAll(".tab").forEach((t) =>
+    t.setAttribute("aria-selected", t.dataset.view === view ? "true" : "false"));
+  VIEWS.forEach((v) => (document.getElementById("view-" + v).hidden = v !== view));
+  renderLegBar();
+  if (view === "board") renderBoard();
+  if (view === "days") renderDays();
+  if (view === "austria" || view === "budapest") renderLibrary(view);
+  if (!fromHash) { syncHash(); scroller().scrollTop = 0; }
+}
+document.querySelectorAll(".tab").forEach((t) =>
+  t.addEventListener("click", () => show(t.dataset.view)));
+window.addEventListener("hashchange", () => {
+  const [v, l] = location.hash.slice(1).split("/");
+  if (l && LEGS[l]) LEG = l;
+  show(v, true);
+});
+
+document.getElementById("n-aut").textContent = DATA.austria.length;
+document.getElementById("n-bud").textContent = DATA.budapest.length;
+(function boot() {
+  let v = "", l = "";
+  try { [v, l] = location.hash.slice(1).split("/"); } catch (e) { /* sandbox */ }
+  if (l && LEGS[l]) LEG = l;
+  show(v || "board", true);
+})();
+</script>
+</body>
+</html>
